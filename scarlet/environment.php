@@ -96,13 +96,23 @@ class Environment
         
         foreach ($files as $file) {
             $f = $directory . DS . $file;
-            $asset = str_replace('.json', '', $file);
+            if (!is_file($f)) continue;
             
-            if (is_file($f)) {
-                $c = (array) json_decode(file_get_contents($f));
+            $components = explode('.', Inflector::underscore($file));
+            $ext = array_pop($components);
+            $asset = implode('.', $components);
+            
+            switch ($ext) {
+                case 'php':
+                    include $f;
+                    break;
                 
-                if (!isset($config[$asset])) $config[$asset] = array();
-                $config[$asset] = (object) array_merge($config[$asset], $c);
+                case 'json':
+                    $c = (array) json_decode(file_get_contents($f));
+                    
+                    if (!isset($config[$asset])) $config[$asset] = array();
+                    $config[$asset] = (object) array_merge($config[$asset], $c);
+                    break;
             }
         }
         

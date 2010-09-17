@@ -85,7 +85,13 @@ class Kernel
     {
         if ($this->_booted) throw new \Exception('The kernel is already booted.');
         
+        // Boot the plugins
         
+        
+        
+        // Now calculate the routes
+        $Router = Router::getInstance();
+        $Router->execute();
         
         $this->_booted = true;
     }
