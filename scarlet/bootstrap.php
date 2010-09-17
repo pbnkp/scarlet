@@ -12,11 +12,11 @@
  * @package scarlet
  * @license GPLv2 <http://www.gnu.org/licenses/gpl-2.0.html>
  */
-namespace Scarlet;
+namespace Scarlet\Framework;
 require_once SCARLET . DS . 'autoloader.php';
 require_once SCARLET . DS . 'inflector.php';
 
-$Environment = Framework\Environment::getInstance();
+$Environment = Environment::getInstance();
 
-$Kernel = new Framework\Kernel($Environment);
+$Kernel = new Kernel($Environment);
 $Kernel->handle();

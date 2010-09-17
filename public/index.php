@@ -25,11 +25,13 @@ if (!defined('DS'))         define('DS', DIRECTORY_SEPARATOR);
  */
 if (!defined('ROOT'))       define('ROOT', dirname(dirname(__FILE__)));
 if (!defined('APP'))        define('APP', ROOT . DS . 'app');
-if (!defined('CORE'))       define('CORE', APP . DS . 'core');
 if (!defined('CONFIG'))     define('CONFIG', ROOT . DS . 'config');
-if (!defined('PLUGINS'))    define('PLUGINS', ROOT . DS . 'plugins');
+if (!defined('DB_DIR'))     define('DB_DIR', ROOT . DS . 'db');
 if (!defined('PUBLIC'))     define('PUBLIC', ROOT . DS . 'public');
 if (!defined('SCARLET'))    define('SCARLET', ROOT . DS . 'scarlet');
+if (!defined('TEST_DIR'))   define('TEST_DIR', ROOT . DS . 'test');
+if (!defined('VENDOR'))     define('VENDOR', ROOT . DS . 'vendor');
+if (!defined('PLUGINS'))    define('PLUGINS', VENDOR . DS . 'plugins');
 
 
 require_once SCARLET . DS . "bootstrap.php";
