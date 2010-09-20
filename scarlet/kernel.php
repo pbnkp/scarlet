@@ -70,7 +70,10 @@ class Kernel
     
     
     /**
+     * Is the kernel running?
      * 
+     * @access public
+     * @return bool
      */
     public function isBooted()
     {
@@ -79,7 +82,10 @@ class Kernel
     
     
     /**
+     * Initialises the kernel and any plugins.
      * 
+     * @access public
+     * @return void
      */
     public function boot()
     {
@@ -124,7 +130,10 @@ class Kernel
     
     
     /**
+     * This is the main program loop.
      * 
+     * @access public
+     * @return void
      */
     public function handle()
     {

@@ -28,6 +28,7 @@ class View
     
     
     protected $Controller;
+    protected $view_folder;
     
     
     protected $data;
@@ -55,16 +56,19 @@ class View
         switch ($type) {
             case 'view':
                 list($controller, $action) = explode('/', $view);
+                $this->view_folder = $controller;
                 $viewfile = VIEWS . DS . $controller . DS . $action;
                 break;
             
             case 'layout':
+                $this->view_folder = 'layouts';
                 $viewfile = LAYOUTS . DS . $view;
                 break;
             
             case 'partial':
                 list($controller, $action) = explode('/', $view);
                 $viewfile = VIEWS . DS . $controller . DS . '_' . $action;
+                $this->data = $content;
                 break;
         }
         
@@ -86,13 +90,15 @@ class View
         
         
         // If we've got this far then everything's good, so render the viewfile.
-        if (is_array($content)) {
-            $this->_content = $content;
-        } else {
-            $this->_content['__main__'] = $content;
+        if ($type != 'partial') {
+            if (is_array($content)) {
+                $this->_content = $content;
+            } else {
+                $this->_content['__main__'] = $content;
+            }
+            if (!isset($this->_content['__main__'])) $this->_content['__main__'] = '';
+            $this->content =& $this->_content['__main__'];
         }
-        if (!isset($this->_content['__main__'])) $this->_content['__main__'] = '';
-        $this->content =& $this->_content['__main__'];
         
         ob_start();
         include($viewfile);
@@ -136,6 +142,26 @@ class View
         }
         
         $this->_content[$key] = $value;
+    }
+    
+    
+    /**
+     * Renders a partial. You can pass parameters to the partial through the
+     * second parameter.
+     * 
+     * @access public
+     * @param string $partial The name of the partial to load
+     * @param array $data The data to pass to the partial (optional)
+     * @return string The rendered partial
+     */
+    public function partial($partial, $data = array())
+    {
+        if (strpos($partial, '/') === false) {
+            $partial = $this->view_folder . '/' . $partial;
+        }
+        
+        $View = new View($this->Controller, $partial, 'partial', $data);
+        return $View->content();
     }
     
 }
