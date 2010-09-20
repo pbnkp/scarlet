@@ -1,6 +1,6 @@
 <?php
 
-namespace Scarlet\Framework;
+namespace Scarlet;
 
 class Router
 {
@@ -12,9 +12,9 @@ class Router
     
     public $request_uri;
     public $routes;
-    public $controller, $controller_name;
-    public $action, $id;
-    public $params;
+    private $controller, $controller_name;
+    private $action, $id;
+    private $params;
     public $route_found = false;
     
     
@@ -44,6 +44,19 @@ class Router
     public static function draw($lambda)
     {
         $lambda(self::getInstance());
+    }
+    
+    
+    public function getController($normalised = true)
+    {
+        if ($normalised) return 'App\Controllers\\' . Inflector::camelize($this->controller_name);
+        return $this->controller;
+    }
+    
+    
+    public function getAction()
+    {
+        return Inflector::underscore($this->action);
     }
     
     
@@ -96,11 +109,7 @@ class Router
         if (empty($this->action)) $this->action = $this->_default_action;
         if (empty($this->id)) $this->id = null;
         
-        $w = explode('_', $this->controller);
-        foreach($w as $k => $v)
-            $w[$k] = ucfirst($v);
-            
-        $this->controller_name = implode('', $w);
+        $this->controller_name = $this->controller . '_controller';
     }
     
     

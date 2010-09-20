@@ -2,7 +2,7 @@
 /**
  * Requires PHP 5.3
  * 
- * Scarlet : Next generation e-commerce.
+ * Scarlet : An event driven PHP framework.
  * Copyright (c) 2010, Matt Kirman <matt@mattkirman.com>
  * 
  * Licensed under the GPL license
@@ -12,7 +12,7 @@
  * @package scarlet
  * @license GPLv2 <http://www.gnu.org/licenses/gpl-2.0.html>
  */
-namespace Scarlet\Framework;
+namespace Scarlet;
 require_once SCARLET . DS . 'autoloader.php';
 require_once SCARLET . DS . 'inflector.php';
 

@@ -1,5 +1,5 @@
 <?php
-Scarlet\Framework\Router::draw(function($map){
+Scarlet\Router::draw(function($map){
     /**
      * The priority is based on the order of creation:
      *  first created -> highest priority

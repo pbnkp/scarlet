@@ -2,7 +2,7 @@
 /**
  * Requires PHP 5.3
  * 
- * Scarlet : Next generation e-commerce.
+ * Scarlet : An event driven PHP framework.
  * Copyright (c) 2010, Matt Kirman <matt@mattkirman.com>
  * 
  * Licensed under the GPL license
@@ -12,7 +12,7 @@
  * @package scarlet
  * @license GPLv2 <http://www.gnu.org/licenses/gpl-2.0.html>
  */
-namespace Scarlet\Framework;
+namespace Scarlet;
 /**
  * The kernel is the heart of the Scarlet system. It manages an environment that
  * can host bundles.
@@ -111,7 +111,7 @@ class Kernel
     
     
     /**
-     * Restarts the kernel. Mostly usefule when running tests.
+     * Restarts the kernel. Mostly useful when running tests.
      * 
      * @access public
      * @return void
@@ -132,7 +132,33 @@ class Kernel
             $this->boot();
         }
         
+        $Router = Router::getInstance();
+        $Controller = $Router->getController();
+        $Controller = new $Controller();
         
+        
+        // Run the action
+        if (method_exists($Controller, $Router->getAction())) {
+            call_user_func_array(array($Controller, $Router->getAction()), array());
+        } else {
+            // We can't find the controller/action. If we're in debug mode then
+            // print out the exception to screen, otherwise just show a 404 page.
+            if ($this->_debug) {
+                throw new \Exception("{$Router->getController()} doesn't implement {$Router->getAction()}()");
+            } else {
+                echo file_get_contents(PUBLIC_DIR . DS . '404.html');
+                exit;
+            }
+        }
+        
+        
+        // Render the view.
+        $View = new View($Controller, $Controller->getView());
+        
+        // And then the layout.
+        $Layout = new View($Controller, $Controller->getLayout(), 'layout', $View->content(true));
+        
+        echo $Layout->content();
     }
     
 }
