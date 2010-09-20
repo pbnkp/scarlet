@@ -25,7 +25,7 @@ if (!defined('DS'))             define('DS', DIRECTORY_SEPARATOR);
  */
 if (!defined('ROOT'))           define('ROOT', dirname(dirname(__FILE__)));
 if (!defined('APP'))            define('APP', ROOT . DS . 'app');
-if (!defined('CONTROLLERS'))    define('CONTROLLERs', APP . DS . 'controllers');
+if (!defined('CONTROLLERS'))    define('CONTROLLERS', APP . DS . 'controllers');
 if (!defined('MODELS'))         define('MODELS', APP . DS . 'models');
 if (!defined('VIEWS'))          define('VIEWS', APP . DS . 'views');
 if (!defined('LAYOUTS'))        define('LAYOUTS', VIEWS . DS . 'layouts');
@@ -33,6 +33,7 @@ if (!defined('CONFIG'))         define('CONFIG', ROOT . DS . 'config');
 if (!defined('DB_DIR'))         define('DB_DIR', ROOT . DS . 'db');
 if (!defined('PUBLIC_DIR'))     define('PUBLIC_DIR', ROOT . DS . 'public');
 if (!defined('SCARLET'))        define('SCARLET', ROOT . DS . 'scarlet');
+if (!defined('CITRUS'))         define('CITRUS', SCARLET . DS . 'citrus');
 if (!defined('TEST_DIR'))       define('TEST_DIR', ROOT . DS . 'test');
 if (!defined('VENDOR'))         define('VENDOR', ROOT . DS . 'vendor');
 if (!defined('PLUGINS'))        define('PLUGINS', VENDOR . DS . 'plugins');

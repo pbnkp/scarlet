@@ -21,6 +21,7 @@ class Controller
 {
     
     public $data = array();
+    public $params = array();
     
     
     protected $layout = 'application';
@@ -40,6 +41,21 @@ class Controller
      */
     public function __construct()
     {
+        if (method_exists($this, '__startup')) $this->__startup();
+        
+    }
+    
+    
+    /**
+     * You shouldn't be using your own destructor. However, if you decide that
+     * you need to, make sure you run parent::__destruct() after your own code.
+     * 
+     * @access public
+     * @return void
+     */
+    public function __destruct()
+    {
+        if (method_exists($this, '__shutdown')) $this->__shutdown();
         
     }
     

@@ -31,6 +31,7 @@ class View
     
     
     protected $data;
+    protected $params;
     
     
     /**
@@ -47,7 +48,8 @@ class View
     public function __construct($Controller, $view, $type = 'view', $content = '')
     {
         $this->Controller =& $Controller;
-        $this->data = $this->Controller->data;
+        $this->data =& $this->Controller->data;
+        $this->params =& $this->Controller->params;
         
         $type = strtolower($type);
         switch ($type) {

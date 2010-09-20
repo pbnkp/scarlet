@@ -135,6 +135,7 @@ class Kernel
         $Router = Router::getInstance();
         $Controller = $Router->getController();
         $Controller = new $Controller();
+        $Controller->params = $Router->getParams();
         
         
         // Run the action

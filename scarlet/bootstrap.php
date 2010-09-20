@@ -18,5 +18,11 @@ require_once SCARLET . DS . 'inflector.php';
 
 $Environment = Environment::getInstance();
 
+
+// Citrus is the Scarlet ORM. We just need to register the autoloader here and
+// Scarlet takes care of the rest.
+Autoloader::add('citrus', CITRUS . DS . '{name}');
+
+
 $Kernel = new Kernel($Environment);
 $Kernel->handle();

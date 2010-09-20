@@ -60,6 +60,12 @@ class Router
     }
     
     
+    public function getParams()
+    {
+        return $this->params;
+    }
+    
+    
     public function root($target)
     {
         $target = $this->parse_target($target);

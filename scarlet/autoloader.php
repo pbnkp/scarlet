@@ -20,6 +20,9 @@ namespace Scarlet;
 class Autoloader
 {
     
+    private static $autoloaders = array();
+    
+    
     /**
      * Converts a namespaced class into a file location and loads it.
      * 
@@ -35,6 +38,7 @@ class Autoloader
         if (empty($name[0])) array_shift($name);
         $type = strtolower($name[0]);
         
+        $name_0 = Inflector::underscore($name[0]);
         unset($name[0]);
         
         foreach ($name as $k => $v) {
@@ -42,23 +46,9 @@ class Autoloader
         }
         $formatted_name = implode('/', $name);
         
-        switch ($type) {
-            case 'scarlet':
-                $file = SCARLET . DS . $formatted_name;
-                break;
-            
-            case 'core':
-                $file = CORE . DS . $formatted_name;
-                break;
-            
-            case 'app':
-                $file = APP . DS . $formatted_name;
-                break;
-            
-            default:
-                // We assume it's a plugin
-                $file = PLUGINS . DS . $formatted_name;
-        }
+        $file = (array_key_exists($type, self::$autoloaders)) ?
+                    str_replace('{name}', $formatted_name, self::$autoloaders[$type]) :
+                    PLUGINS . DS . $name_0 . DS . $formatted_name;
         
         $file .= '.php';
         
@@ -69,7 +59,26 @@ class Autoloader
         require_once $file;
     }
     
+    
+    /**
+     * Add an autoloader structure. This allows us to easily extend the Scarlet
+     * app structure.
+     * 
+     * @access public
+     * @static
+     * @param string $type The top level namespace e.g. scarlet, app, citrus, etc.
+     * @param string $structure The directory structure to load this file. Use {name}
+     *                          as a substitute for the class name
+     * @return void
+     */
+     public static function add($type, $structure)
+     {
+         self::$autoloaders[strtolower($type)] = $structure;
+     }
+    
 }
 
 
 spl_autoload_register('\Scarlet\Autoloader::load');
+Autoloader::add('scarlet', SCARLET . DS . '{name}');
+Autoloader::add('app', APP . DS . '{name}');
