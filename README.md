@@ -23,4 +23,4 @@ Want to define your own custom Router? Need to change the way controllers are na
 
 ##Requirements
 
-Scarlet is only supported on PHP 5.3.2 and up. It will not run on any versions of that do not support namespaces or anonymous functions.
+Scarlet is only supported on PHP 5.3.2 and up. It will not run on any versions of PHP that do not support namespaces or anonymous functions.
