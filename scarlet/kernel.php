@@ -143,6 +143,16 @@ class Kernel
         
         $Router = Router::getInstance();
         $Controller = $Router->getController();
+
+        if ($Controller === false) { // We couldn't find a valid route
+            if ($this->_debug) {
+                throw new \Exception("Couldn't find a valid route");
+            } else {
+                echo file_get_contents(PUBLIC_DIR . DS . '404.html');
+                exit;
+            }
+        }
+
         $Controller = new $Controller();
         $Controller->params = $Router->getParams();
         

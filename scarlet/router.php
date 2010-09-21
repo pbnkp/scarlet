@@ -49,6 +49,8 @@ class Router
     
     public function getController($normalised = true)
     {
+        if (!isset($this->controller)) return false;
+
         if ($normalised) return 'App\Controllers\\' . Inflector::camelize($this->controller_name);
         return $this->controller;
     }
@@ -144,7 +146,7 @@ class Route {
         $this->conditions = $conditions;
         $p_names = array(); $p_values = array();
 
-        $url = str_replace(')', '?)', $url);
+        $url = str_replace(array('(',')'), array('((', ')?)'), $url);
         
         preg_match_all('@:([\w]+)@', $url, $p_names, PREG_PATTERN_ORDER);
         $p_names = $p_names[0];
