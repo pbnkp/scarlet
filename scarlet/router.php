@@ -165,7 +165,7 @@ class Route {
             
             $this->is_matched = true;
         }
-        var_dump($this);
+        
         unset($p_names); unset($p_values);
     }
     
