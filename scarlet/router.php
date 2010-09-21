@@ -77,7 +77,6 @@ class Router
     
     public function match($rule, $target=array(), $conditions=array())
     {
-        //$rules = explode('(', $rule);
         $this->routes[$rule] = new Route($rule, $this->request_uri, $target, $conditions);
     }
     
@@ -107,7 +106,7 @@ class Router
         $this->route_found = true;
         $params = $route->params;
         $this->controller = $params['controller']; unset($params['controller']);
-        $this->action = $params['action']; unset($params['action']);
+        $this->action = (isset($params['action'])) ? $params['action'] : null; unset($params['action']);
         $this->id = (isset($params['id'])) ? $params['id'] : false; 
         $this->params = array_merge($params, $_GET);
         
@@ -136,6 +135,7 @@ class Route {
     public $params;
     public $url;
     private $conditions;
+    private $url_regex;
 
     function __construct($url, $request_uri, $target, $conditions)
     {
@@ -143,24 +143,27 @@ class Route {
         $this->params = array();
         $this->conditions = $conditions;
         $p_names = array(); $p_values = array();
+
+        $url = str_replace(')', '?)', $url);
         
         preg_match_all('@:([\w]+)@', $url, $p_names, PREG_PATTERN_ORDER);
         $p_names = $p_names[0];
         
         $url_regex = preg_replace_callback('@:[\w]+@', array($this, 'regex_url'), $url);
         $url_regex .= '/?';
+        $this->url_regex = $url_regex;
         
         if (preg_match('@^' . $url_regex . '$@', $request_uri, $p_values)) {
             array_shift($p_values);
             foreach($p_names as $index => $value)
-                $this->params[substr($value,1)] = urldecode($p_values[$index]);
+                $this->params[substr($value,1)] = str_replace('/', '', urldecode($p_values[$index]));
             
             foreach($target as $key => $value)
-                $this->params[$key] = $value;
+                $this->params[$key] = str_replace('/', '', $value);
             
             $this->is_matched = true;
         }
-        
+        var_dump($this);
         unset($p_names); unset($p_values);
     }
     

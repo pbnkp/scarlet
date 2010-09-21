@@ -19,8 +19,8 @@ Scarlet\Router::draw(function($map){
      * This is a default route. It's not recommended for RESTful applications
      * as it makes every action in every controller accessible via GET requests.
      */
-    $map->match('/:controller(/:action(/:id))');
+    $map->match('/:controller(/:action)');
     
-    $map->root('home#index');
+    //$map->root('home#index');
     
 });
