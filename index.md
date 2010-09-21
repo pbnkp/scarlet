@@ -1,0 +1,5 @@
+---
+title: Scarlet
+layout: default
+---
+
