@@ -102,8 +102,8 @@ class Controller
         if (strpos($filter, '::')) {
             // This filter is defined in another class
             list($class, $method) = explode('::', $filter);
-            if (strpos($class, '\\') === false) $class = __NAMESPACE__ . '\\' . $class;
-            $action = '\\' . $class . '::' . $method;
+            if (strpos($class, '\\') === false) $class = '\\' . __NAMESPACE__ . '\\' . $class;
+            $action = $class . '::' . $method;
         } else {
             $class = $this;
             $method = $filter;
