@@ -29,6 +29,7 @@ class Controller
     
     
     protected $beforeFilters = array();
+    protected $afterFilters = array();
     
     
     /**
@@ -42,7 +43,7 @@ class Controller
     public function __construct()
     {
         if (method_exists($this, '__startup')) $this->__startup();
-        
+        $this->runFilters($this->beforeFilters);
     }
     
     
@@ -56,7 +57,65 @@ class Controller
     public function __destruct()
     {
         if (method_exists($this, '__shutdown')) $this->__shutdown();
-        
+        $this->runFilters($this->afterFilters);
+    }
+
+
+    /**
+     * Runs a specific set of filters. If any filters return boolean 'false' then
+     * execution is stopped.
+     *
+     * @access protected
+     * @final
+     * @param array $filters The filters to run
+     * @return void
+     */
+    final protected function runFilters($filters)
+    {
+        if (empty($filters)) return;
+
+        foreach ($filters as $filter) {
+            if (is_string($filter)) {
+                // This is a filter that is run on every request.
+                $this->runFilter($filter);
+            } elseif (is_array($filter)) {
+                // This is a filter that has options
+                
+            }
+        }
+    }
+
+
+    /**
+     * Runs a single filter. If a filter returns boolean 'false' then execution
+     * is stopped. Filters can either exist in the controller (or a controller that
+     * your code inherits from) or in a separate class. We only support static
+     * methods for filters defined outside of the controller.
+     *
+     * @access protected
+     * @final
+     * @param mixed $filter The filter to run
+     * @return void
+     */
+    final protected function runFilter($filter)
+    {
+        if (strpos($filter, '::')) {
+            // This filter is defined in another class
+            list($class, $method) = explode('::', $filter);
+            if (strpos($class, '\\') === false) $class = __NAMESPACE__ . '\\' . $class;
+            $action = '\\' . $class . '::' . $method;
+        } else {
+            $class = $this;
+            $method = $filter;
+            $action = array($this, $filter);
+        }
+
+        if (method_exists($class, $method)) {
+            $response = call_user_func_array($action, array());
+            if ($response === false) exit;
+        } else {
+            // Fail quietly, for now
+        }
     }
     
     
