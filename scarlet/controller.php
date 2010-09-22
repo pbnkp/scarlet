@@ -26,6 +26,9 @@ class Controller
     
     protected $layout = 'application';
     protected $view;
+
+
+    protected $helpers = array('\Scarlet\Helpers\Html', '\Scarlet\Helpers\Form');
     
     
     protected $beforeFilters = array();
@@ -152,6 +155,20 @@ class Controller
         
         $Router = Router::getInstance();
         return $Router->getController(false) . '/' . $Router->getAction();
+    }
+
+
+    /**
+     * Returns the helpers that need to be loaded for the view. Default helpers are
+     * '\Scarlet\Helpers\Html' and '\Scarlet\Helpers\Form'.
+     *
+     * @access public
+     * @final
+     * @return array The helpers to load
+     */
+    final public function getHelpers()
+    {
+        return $this->helpers;
     }
     
 }

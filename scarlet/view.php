@@ -33,6 +33,10 @@ class View
     
     protected $data;
     protected $params;
+
+
+    private $helperMethods = array();
+    private $helpers = array();
     
     
     /**
@@ -88,7 +92,6 @@ class View
             }
         }
         
-        
         // If we've got this far then everything's good, so render the viewfile.
         if ($type != 'partial') {
             if (is_array($content)) {
@@ -100,10 +103,60 @@ class View
             $this->content =& $this->_content['__main__'];
         }
         
+        $this->loadHelpers();
+        
         ob_start();
         include($viewfile);
         $this->_content['__main__'] = ob_get_contents();
         ob_end_clean();
+    }
+
+
+    /**
+     * Loads the helpers that we are using in the view. Using PHP's reflection we
+     * can load the methods without needing to load the class. We then instantiate
+     * the class only when someone calls one of it's methods.
+     *
+     * @access private
+     * @return void
+     */
+    private function loadHelpers()
+    {
+        $helpers = $this->Controller->getHelpers();
+        foreach ($helpers as $helper) {
+            $class = new \ReflectionClass($helper);
+            $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
+
+            foreach ($methods as $method) {
+                $this->helperMethods[$method->name] = $method->class;
+            }
+        }
+    }
+
+
+    /**
+     * Catches an undefined method call, usually belonging to a helper. We then
+     * search for a class that can help us, instantiate it and return the method
+     * back to the view.
+     *
+     * @access public
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        if (array_key_exists($name, $this->helperMethods)) {
+            $class = $this->helperMethods[$name];
+            if (!array_key_exists($class, $this->helpers)) {
+                // We haven't created this helper before, so create it
+                $this->helpers[$class] = new $class;
+            }
+
+            return call_user_func_array(array($this->helpers[$class], $name), $arguments);
+        }
+
+        throw new \Exception("Unkown method '$name'");
     }
     
     
