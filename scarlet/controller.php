@@ -59,8 +59,8 @@ class Controller
      */
     public function __destruct()
     {
-        if (method_exists($this, '__shutdown')) $this->__shutdown();
         $this->runFilters($this->afterFilters);
+        if (method_exists($this, '__shutdown')) $this->__shutdown();
     }
 
 
