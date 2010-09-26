@@ -1,0 +1,36 @@
+pre {
+  font: 13px "Bitstream Vera Sans Mono", Courier, monospace;
+  margin: 0px;
+  padding: 0px;
+  background-color: #232323;
+  border: 1px solid black;
+  color: #E6E0DB;
+  padding: 3px 5px;
+  overflow: auto;
+  font-size: 12px;
+  margin: 12px 0;
+  text-shadow: 0;
+}
+
+pre * {
+  font: 13px "Bitstream Vera Sans Mono", Courier, monospace;
+}
+
+pre .an { color:#E7BE69 }                      /* html attribute */
+pre .c  { color:#BC9358; font-style: italic; } /* comment */
+pre .ch { color:#509E4F }                      /* escaped character */
+pre .cl { color:#FFF }                         /* class */
+pre .co { color:#FFF }                         /* constant */
+pre .fl { color:#A4C260 }                      /* float */
+pre .fu { color:#FFC56D }                      /* function */
+pre .gv { color:#D0CFFE }                      /* global variable */
+pre .i  { color:#A4C260 }                      /* integer */
+pre .il { background:#151515 }                 /* inline code */
+pre .iv { color:#D0CFFE }                      /* instance variable */
+pre .pp { color:#E7BE69 }                      /* doctype */
+pre .r  { color:#CB7832 }                      /* keyword */
+pre .rx { color:#A4C260 }                      /* regex */
+pre .s  { color:#A4C260 }                      /* string */
+pre .sy { color:#6C9CBD }                      /* symbol */
+pre .ta { color:#E7BE69 }                      /* html tag */
+pre .pc { color:#6C9CBD }                      /* boolean */
