@@ -26,8 +26,14 @@ class Controller
     
     protected $layout = 'application';
     protected $view;
-
-
+    
+    
+    /**
+     * Our default helpers. You can disable them by with no side effects.
+     * 
+     * @access protected
+     * @var array
+     */
     protected $helpers = array('\Scarlet\Helpers\Html', '\Scarlet\Helpers\Form');
     
     
