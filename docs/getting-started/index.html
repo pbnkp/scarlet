@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Scarlet | Getting Started</title>
+    <title>Scarlet | Getting Started with Scarlet</title>
     <link rel="stylesheet" type="text/css" href="/stylesheets/screen.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/code.css">
 </head>
@@ -23,7 +23,98 @@
     </div>
     
     
+    <div id="subheader">
+        <div class="container">
+            <h3><a href="/docs/">Documentation</a> <span class="sep">&raquo;</span> Getting Started with Scarlet</h3>
+        </div>
+    </div>
     
+    
+    <div class="container">
+        <div id="content">
+            <h3 id="assumptions">Assumptions</h3>
+
+<p>This guide is designed for newcomers who want to get started with a Scarlet application from scratch. It does not assume that you have any prior experience with Scarlet. However, to get the most out of it, you need to have some prerequisites installed:</p>
+
+<ul>
+<li>The <a href="http://php.net/">PHP</a> language version 5.3.2 or higher</li>
+  <li>A working installation of the <a href="http://mysql.com/">MySQL database</a>
+</li>
+</ul>
+<p>Scarlet is a web application framework running on the PHP programming language. If you have no prior experience with PHP you will find a steep learning curve diving straight into Scarlet. However, Scarlet leans on common design patterns found in other frameworks (e.g. <a href="http://rubyonrails.com/">Rails</a>) so in some cases you may find the learning curve not quite so steep.</p>
+
+<h3 id="what-is-scarlet">What is Scarlet?</h3>
+
+<p>Scarlet is a web application framework written in the PHP programming language. It is designed to make programming web applications easier by making assumptions about what every developer needs to get started.</p>
+
+<p>Scarlet is opinionated software. It makes the assumption that there is a “best” way to do things, and is designed to encourage that way. However, more experienced developers will find a reasonable amount of flexibility in application design and structure.</p>
+
+<p>The Scarlet philosophy includes several guiding principles:</p>
+
+<ul>
+<li>
+<strong>DRY</strong> – “Don’t Repeat Yourself” – suggests that writing the same code over and over again is a bad thing.</li>
+  <li>
+<strong>Convention Over Configuration</strong> – means that Scarlet makes assumptions about what you want to do and how you’re going to do it, rather than requiring you to specify every little thing through endless configuration files.</li>
+  <li>
+<strong>REST is the best pattern for web applications</strong> – organising your application around resources and standard HTTP verbs is the fastest way to go.</li>
+</ul>
+<h4 id="the-mvc-architecture">The MVC Architecture</h4>
+
+<p>At the core of Scarlet is the Model, View, Controller architecture, usually just called MVC. MVC benefits include:</p>
+
+<ul>
+<li>Isolation of business logic from the user interface</li>
+  <li>Ease of keeping code DRY</li>
+  <li>Making it clear where different types of code belong for easier maintenance</li>
+</ul>
+<h5 id="models">Models</h5>
+
+<p>A model represents the information (data) of the application and the rules to manipulate that data. In the case of Scarlet, models are primarily used for managing the rules of interaction with a corresponding database table. In most cases, one table in your database will correspond to one model in your application. The bulk of your application’s business logic will be concentrated in the models.</p>
+
+<h5 id="views">Views</h5>
+
+<p>Views represent the user interface of your application. In Scarlet, views are often HTML files with embedded PHP code that performs tasks related solely to the presentation of the data. Views handle the job of providing data to the web browser or other tool that is used to make requests from your application.</p>
+
+<h5 id="controllers">Controllers</h5>
+
+<p>Controllers provide the “glue” between models and views. In Scarlet, controllers are responsible for processing the incoming requests from the web browser, interrogating models for data and passing that data on to the views for presentation.</p>
+
+<h4 id="the-components-of-scarlet">The Components of Scarlet</h4>
+
+<h4 id="rest">REST</h4>
+
+<p>REST stands for Representational State Transfer and is the foundation of the RESTful architecture. REST in terms of Scarlet boils down to two main principles:</p>
+
+<ul>
+<li>Using resource identifiers such as URLs to represent resources.</li>
+  <li>Transferring representations of the state of that resource between system components.</li>
+</ul>
+<p>For example, to a Scarlet application a request such as this:</p>
+
+<pre><code><span class="co">DELETE</span> <span class="rx"><span class="dl">/</span><span class="k">photos</span><span class="dl">/</span></span><span class="i">17</span></code></pre>
+
+<p>would be understood to refer to a photo resource with the ID of 17, and to indicate a desired action - deleting that resource. REST is a natural style for the architecture of web applications, and Scarlet hooks into this shielding you from many of the RESTful complexities and browser quirks.</p>
+
+<h3 id="creating-a-new-scarlet-project">Creating a New Scarlet Project</h3>
+        </div>
+        
+        <div id="sidebar">
+            <ol>
+    <li><a href="#assumptions">Guide Assumptions</a></li>
+    <li><a href="#what-is-scarlet">What is Scarlet?</a>
+        <ul>
+            <li><a href="#the-mvc-architecture">The MVC Architecture</a></li>
+            <li><a href="#the-components-of-scarlet">The Components of Scarlet</a></li>
+            <li><a href="#rest">REST</a></li>
+        </ul>
+    </li>
+    <li><a href="#creating-a-new-scarlet-project">Creating a New Scarlet Project</a></li>
+</ol>
+        </div>
+        
+        <div class="clear"></div>
+    </div>
     
     
     <div id="footer">

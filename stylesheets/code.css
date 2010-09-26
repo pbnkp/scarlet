@@ -1,14 +1,11 @@
 pre {
   font: 13px "Bitstream Vera Sans Mono", Courier, monospace;
-  margin: 0px;
-  padding: 0px;
   background-color: #232323;
   border: 1px solid black;
   color: #E6E0DB;
   padding: 3px 5px;
   overflow: auto;
-  font-size: 12px;
-  margin: 12px 0;
+  margin: 0 0 19px;
   text-shadow: 0;
 }
 
