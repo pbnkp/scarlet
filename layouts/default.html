@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Scarlet | <%= @item[:title] %></title>
+    <link rel="stylesheet" type="text/css" href="/style.css" media="screen">
+</head>
+
+<body>
+    <div id="header">
+        <div class="container">
+            <h1>Scarlet</h1>
+            <h2>An open-source PHP framework</h2>
+        </div>
+    </div>
+    
+    
+    <%= yield %>
+    
+    
+    <div id="footer">
+        <div class="container">
+            A project by <a href="http://mattkirman.com/">Matt Kirman</a>.<br />
+            <a href="http://scarlet-framework.com/">Scarlet</a> is released under the
+            <a href="http://www.opensource.org/licenses/gpl-2.0.php" target="_blank">GLPv2 Licence</a>.
+        </div>
+    </div>
+</body>
+</html>
