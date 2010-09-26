@@ -19,7 +19,24 @@
     </div>
     
     
-    <%= yield %>
+    <div id="subheader">
+        <div class="container">
+            <h3><a href="/docs/">Documentation</a> <span class="sep">&raquo;</span> <%= @item[:title] %></h3>
+        </div>
+    </div>
+    
+    
+    <div class="container">
+        <div id="content">
+            <%= yield %>
+        </div>
+        
+        <div id="sidebar">
+            <%= render @item[:sidebar] %>
+        </div>
+        
+        <div class="clear"></div>
+    </div>
     
     
     <div id="footer">

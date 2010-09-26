@@ -61,6 +61,8 @@ compile '/docs/*/' do
       filter :haml
     when 'markdown'
       filter :kramdown
+    when 'md'
+      filter :kramdown
   end
   filter :syntax_colorize
   layout 'docs'
@@ -78,9 +80,11 @@ compile '/docs/' do
       filter :haml
     when 'markdown'
       filter :kramdown
+    when 'md'
+      filter :kramdown
   end
   filter :syntax_colorize
-  layout 'docs'
+  layout 'default'
 end
 
 compile '*' do
@@ -94,6 +98,8 @@ compile '*' do
     when 'html.haml'
       filter :haml
     when 'markdown'
+      filter :kramdown
+    when 'md'
       filter :kramdown
   end
   filter :syntax_colorize
