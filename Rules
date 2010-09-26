@@ -17,17 +17,87 @@ preprocess do
 end
 
 
-compile '/stylesheet/' do
-  # don’t filter or layout
+### Images
+compile '/images/*/' do
+# No need to run images through a filter. This is just for getting them in right place
+end
+
+route '/images/*/' do
+ item.identifier.chop + '.' + item[:extension]
+end
+
+### Javascript
+
+compile '/javascript/*/' do
+# No need to run images through a filter. This is just for getting them in right place
+end
+
+route '/javascript/*/' do
+ item.identifier.chop + '.' + item[:extension]
+end
+
+### Stylesheets
+
+compile '/stylesheets/*/' do
+  # No need to run css through a filter. This is just for getting them in the right place
+end
+
+route '/stylesheets/*/' do
+  # don't generate a directory like we do for HTML files
+  item.identifier.chop + '.css'
+end
+
+### HTML
+
+compile '/docs/*/' do
+  case item[:extension]
+    when 'html'
+      filter :erb
+    when 'html.erb'
+      filter :erb
+    when 'haml'
+      filter :haml
+    when 'html.haml'
+      filter :haml
+    when 'markdown'
+      filter :kramdown
+  end
+  filter :syntax_colorize
+  layout 'docs'
+end
+
+compile '/docs/' do
+  case item[:extension]
+    when 'html'
+      filter :erb
+    when 'html.erb'
+      filter :erb
+    when 'haml'
+      filter :haml
+    when 'html.haml'
+      filter :haml
+    when 'markdown'
+      filter :kramdown
+  end
+  filter :syntax_colorize
+  layout 'docs'
 end
 
 compile '*' do
-  filter :erb
+  case item[:extension]
+    when 'html'
+      filter :erb
+    when 'html.erb'
+      filter :erb
+    when 'haml'
+      filter :haml
+    when 'html.haml'
+      filter :haml
+    when 'markdown'
+      filter :kramdown
+  end
+  filter :syntax_colorize
   layout 'default'
-end
-
-route '/stylesheet/' do
-  '/style.css'
 end
 
 route '*' do

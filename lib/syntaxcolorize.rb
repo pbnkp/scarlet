@@ -15,7 +15,7 @@ module Nanoc3::Filters
           data.inner_html = codify(data.inner_text, lang)
         end
       end
-      doc.to_s
+      doc.css('body').inner_html.to_s
     end
 
     def codify(str, lang)
