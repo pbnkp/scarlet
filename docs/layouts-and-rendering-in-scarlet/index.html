@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Scarlet | Layouts &amp; Rendering in Scarlet</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/screen.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/code.css">
+</head>
+
+<body>
+    <div id="header">
+        <div class="container">
+            <h1><a href="/">Scarlet</a></h1>
+            <h2>An open-source PHP framework</h2>
+            
+            <ul id="navigation">
+    <li class="selected"><a href="/docs/">Documentation</a></li>
+    <li><a href="http://github.com/mattkirman/scarlet">Code</a></li>
+    <li><a href="http://scarlet-framework.lighthouseapp.com/projects/60743">Issues</a></li>
+</ul>
+        </div>
+    </div>
+    
+    
+    <div id="subheader">
+        <div class="container">
+            <h3><a href="/docs/">Documentation</a> <span class="sep">&raquo;</span> Layouts &amp; Rendering in Scarlet</h3>
+        </div>
+    </div>
+    
+    
+    <div class="container">
+        <div id="content">
+            <h3 id="overview">Overview</h3>
+
+<p>This guide outlines the interaction between the Controller and View. When it’s time to send a response back to the user, the Controller normally hands things over to the View.</p>
+
+<p>Usually this involves deciding what should be sent as a response and calling an appropriate method to create that response. If the response is a full-blown view, Scarlet will wrap the view in a layout and possibly pulls in partial views.</p>
+
+<h3 id="creating-responses">Creating Responses</h3>
+
+<p>From the controller’s point of view, there are three ways to create an HTTP response:</p>
+
+<ul>
+<li>Do nothing at all.</li>
+  <li>Call <code>$this-&gt;render</code> to create a full response to send back to the browser. <strong><em>[Currently unstable, will be added in a future release]</em></strong>
+</li>
+  <li>Call <code>$this-&gt;redirect</code> to send an HTTP redirect status code to the browser. <strong><em>[Currently unstable, will be added in a future release]</em></strong>
+</li>
+</ul>
+<h4 id="rendering-by-default">Rendering by Default</h4>
+
+<p>Default rendering is an excellent example of “convention over configuration” (as demonstrated by Rails). Implementing this, Scarlet, by default, will automatically render views with names that correspond to valid routes. For example, if you have this code in your <code>ProductController</code> class:</p>
+
+<pre><code class="language-php"><span class="r">namespace</span> <span class="co">App</span>\<span class="co">Controllers</span>;
+<span class="r">class</span> <span class="cl">ProductController</span> <span class="r">extends</span> <span class="co">ApplicationController</span>
+{
+    
+}</code></pre>
+
+<p>And you have a view file in <code>app/view/product/index.php</code>:</p>
+
+<pre><code class="language-html"><span class="ta">&lt;h1&gt;</span>Some products will be coming soon!<span class="ta">&lt;/h1&gt;</span></code></pre>
+
+<p>Scarlet will automatically render <code>app/view/product/index.php</code> when you navigate to <code>/product</code> and you will see on your screen that “Some products will be coming soon!”.</p>
+
+<h3 id="using-layouts">Using Layouts</h3>
+
+<p>When we render a view as a response, it does so by combining the view with a layout. Within a layout, and even from within a view, you have access to four tools for combining different bits of output to form the overall response:</p>
+
+<ul>
+<li><code>data</code></li>
+  <li><code>content</code></li>
+  <li>Partials</li>
+  <li>Helpers</li>
+</ul>
+<h4 id="understanding-data">Understanding <code>data</code>
+</h4>
+
+<p>Scarlet places all data returned by your controller into the <code>$this-&gt;data</code> array.</p>
+
+<h4 id="understanding-content">Understanding <code>content</code>
+</h4>
+
+<p>Within the context of a layout, <code>$this-&gt;content()</code> identifies a section where content from the view should be inserted. The simplest way to use this is to have a single <code>content</code>, into which the entire contents of the view currently being rendered is inserted:</p>
+
+<pre><code class="language-php"><span class="ta">&lt;html&gt;</span>
+    <span class="ta">&lt;head&gt;</span>
+    <span class="ta">&lt;/head&gt;</span>
+    
+    <span class="ta">&lt;body&gt;</span>
+        <span class="idl">&lt;?php</span> <span class="pd">echo</span> <span class="lv">$this</span>-&gt;content(); <span class="idl">?&gt;</span>
+    <span class="ta">&lt;/body&gt;</span>
+<span class="ta">&lt;/html&gt;</span></code></pre>
+
+<p>You can also create layouts with multiple <code>content</code> sections:</p>
+
+<pre><code class="language-php"><span class="ta">&lt;html&gt;</span>
+    <span class="ta">&lt;head&gt;</span>
+    <span class="idl">&lt;?php</span> <span class="pd">echo</span> <span class="lv">$this</span>-&gt;content_for(<span class="s"><span class="dl">'</span><span class="k">head</span><span class="dl">'</span></span>); <span class="idl">?&gt;</span>
+    <span class="ta">&lt;/head&gt;</span>
+    
+    <span class="ta">&lt;body&gt;</span>
+        <span class="idl">&lt;?php</span> <span class="pd">echo</span> <span class="lv">$this</span>-&gt;content(); <span class="idl">?&gt;</span>
+    <span class="ta">&lt;/body&gt;</span>
+<span class="ta">&lt;/html&gt;</span></code></pre>
+
+<p>The main body of the view will always render into the unnamed <code>content</code>. To render content into a named section, you use the <code>content_for</code> method.</p>
+
+<h4 id="using-content_for">Using <code>content_for</code>
+</h4>
+
+<p>The <code>content_for</code> method allows you to insert content into a <code>content_for</code> block in your layout. You use <code>content_for</code> for both assigning and inserting content. For example, this view would work with the layout you just saw:</p>
+
+<pre><code class="language-php"><span class="idl">&lt;?php</span> <span class="lv">$this</span>-&gt;content_for(<span class="s"><span class="dl">'</span><span class="k">head</span><span class="dl">'</span></span>, <span class="s"><span class="dl">'</span><span class="k">&lt;title&gt;Scarlet&lt;/title&gt;</span><span class="dl">'</span></span>); <span class="idl">?&gt;</span>
+
+<span class="ta">&lt;p&gt;</span>Hello, World!<span class="ta">&lt;/p&gt;</span></code></pre>
+
+<p>And would be rendered as:</p>
+
+<pre><code class="language-php"><span class="ta">&lt;html&gt;</span>
+    <span class="ta">&lt;head&gt;</span>
+        <span class="ta">&lt;title&gt;</span>Scarlet<span class="ta">&lt;/title&gt;</span>
+    <span class="ta">&lt;/head&gt;</span>
+    
+    <span class="ta">&lt;body&gt;</span>
+        <span class="ta">&lt;p&gt;</span>Hello, World!<span class="ta">&lt;/p&gt;</span>
+    <span class="ta">&lt;/body&gt;</span>
+<span class="ta">&lt;/html&gt;</span></code></pre>
+
+<p>The <code>content_for</code> method is very helpful when your layout contains distinct regions, such as sidebars and footers, that should get their own page specific blocks of content inserted.</p>
+
+<h4 id="using-partials">Using Partials</h4>
+
+<p>Partial template - usually just called “partials” - are another device for breaking apart the rendering process into more manageable chunks. With a partial, you can move code for rendering a particular piece of a response into it’s own file.</p>
+
+<p>Layouts, views and partials can all render partials.</p>
+
+<h5 id="rendering-partials">Rendering Partials</h5>
+
+<p>To render a partial as part of a view you use the <code>partial</code> method and include the name of the partial as an argument.</p>
+
+<pre><code class="language-php"><span class="idl">&lt;?php</span> <span class="pd">echo</span> <span class="lv">$this</span>-&gt;partial(<span class="s"><span class="dl">'</span><span class="k">menu</span><span class="dl">'</span></span>); <span class="idl">?&gt;</span></code></pre>
+
+<p>This will render a file named <code>_menu.php</code> at that point within the view being rendered.  Note the leading underscore character: partials are named with a leading underscore to distinguish them from regular views, even though they are referred to without the underscore. This holds true even when you’re pulling in a partial from another folder:</p>
+
+<pre><code class="language-php"><span class="idl">&lt;?php</span> <span class="pd">echo</span> <span class="lv">$this</span>-&gt;partial(<span class="s"><span class="dl">'</span><span class="k">shared/menu</span><span class="dl">'</span></span>); <span class="idl">?&gt;</span></code></pre>
+
+<p>This code will pull in the partial from <code>app/views/shared/_menu.php</code>.</p>
+
+<h5 id="using-partials-to-simplify-views">Using Partials to Simplify Views</h5>
+
+<p>One way to use partials is to treat them as the equivalent of subroutines: as a way to move details out of the view so that you can grasp what’s going on more easily.</p>
+
+<p>Furthermore, this <abbr title="Don't Repeat Yourself">DRY</abbr>s up your code nicely as you can now reuse blocks of code between views. You no longer have to worry about the details of these sections when you’re concentrating on a particular page.</p>
+
+<h5 id="passing-local-variables">Passing Local Variables</h5>
+
+<p>You can also pass local variables into partials, making them even more powerful and flexible:</p>
+
+<pre><code class="language-php"><span class="idl">&lt;?php</span>
+    <span class="pd">echo</span> <span class="lv">$this</span>-&gt;partial(<span class="s"><span class="dl">'</span><span class="k">menu</span><span class="dl">'</span></span>, <span class="pd">array</span>(
+        <span class="s"><span class="dl">'</span><span class="k">current_page</span><span class="dl">'</span></span> =&gt; <span class="lv">$this</span>-&gt;data[<span class="s"><span class="dl">'</span><span class="k">current_page</span><span class="dl">'</span></span>],
+    ));
+<span class="idl">?&gt;</span></code></pre>
+        </div>
+        
+        <div id="sidebar">
+            <ol>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#creating-responses">Creating Responses</a>
+        <ul>
+            <li><a href="#rendering-by-default">Rendering by Default</a></li>
+        </ul>
+    </li>
+    
+    <li><a href="#using-layouts">Using Layouts</a>
+        <ul>
+            <li><a href="#understanding-data">Understanding <code>data</code></a></li>
+            <li><a href="#understanding-content">Understanding <code>content</code></a></li>
+            <li><a href="#using-content_for">Using <code>content_for</code></a></li>
+            <li><a href="#using-partials">Using Partials</code></a></li>
+        </ul>
+    </li>
+</ol>
+        </div>
+        
+        <div class="clear"></div>
+    </div>
+    
+    
+    <div id="footer">
+        <div class="container">
+            <p>
+                Copyright &copy; <a href="http://mattkirman.com/">Matt Kirman</a> 2010.<br />
+                <a href="http://scarlet-framework.com/">Scarlet</a> is released under the
+                <a href="http://www.opensource.org/licenses/gpl-2.0.php" target="_blank">GLPv2 Licence</a>.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

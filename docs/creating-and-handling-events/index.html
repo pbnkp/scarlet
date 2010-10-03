@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Scarlet | Creating and Handling Events</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/screen.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/code.css">
+</head>
+
+<body>
+    <div id="header">
+        <div class="container">
+            <h1><a href="/">Scarlet</a></h1>
+            <h2>An open-source PHP framework</h2>
+            
+            <ul id="navigation">
+    <li class="selected"><a href="/docs/">Documentation</a></li>
+    <li><a href="http://github.com/mattkirman/scarlet">Code</a></li>
+    <li><a href="http://scarlet-framework.lighthouseapp.com/projects/60743">Issues</a></li>
+</ul>
+        </div>
+    </div>
+    
+    
+    <div id="subheader">
+        <div class="container">
+            <h3><a href="/docs/">Documentation</a> <span class="sep">&raquo;</span> Creating and Handling Events</h3>
+        </div>
+    </div>
+    
+    
+    <div class="container">
+        <div id="content">
+            <h3 id="introduction-to-events">Introduction to Events</h3>
+
+<p>Scarlet is a loosely event-driven framework. What this means is that whilst the core functionality of Scarlet is designed around the MVC paradigm we also provide an event-based interface that you can develop on.</p>
+
+<p>This allows you to write helpers and plugins that can integrate deeply with both the core and application functionality without having to modify any existing code.</p>
+
+<h3 id="creating-event-listeners">Creating Event Listeners</h3>
+
+<p>All events, and their listeners, are handled by the <code>\Scarlet\Reactor</code> class. Registering an event listener is as simple as:</p>
+
+<pre><code class="lanugage-php"><span class="er">\</span><span class="co">Scarlet</span><span class="er">\</span><span class="co">Reactor</span>::bind(<span class="gv">$your_event</span>, <span class="gv">$your_callback</span>);</code></pre>
+
+<p>where <code>$your_event</code> is the name of the event you want to bind to (for example, <code>app.user.account.created</code>) and <code>$your_callback</code> is one of the following:</p>
+
+<ul>
+<li>
+<strong>A lambda function</strong> – perhaps the simplest way to add a custom event listener.</li>
+  <li>
+<strong>An instance method</strong> – should be passed to the <code>bind</code> method as an array in the form <code>array($object, 'method_name')</code>.</li>
+  <li>
+<strong>A class method</strong> – should be passed to the <code>bind</code> method as a string e.g. <code>\YourClass::static_method</code>. Make sure parentheses are removed and your class is fully namespaced.</li>
+</ul>
+<p>The <code>bind</code> method also takes a third, optional, parameter called <code>$priority</code>. This is an integer value. Callbacks are executed in the order of priority i.e. priority 100 will get executed before priority 20. The default priority is 50.</p>
+
+<p><em>For example:</em></p>
+<pre class="no-margin-top"><code class="language-php">\<span class="co">Scarlet</span>\<span class="co">Reactor</span>::bind(<span class="s"><span class="dl">'</span><span class="k">your.event</span><span class="dl">'</span></span>, <span class="r">function</span>(){
+    <span class="pd">echo</span> <span class="s"><span class="dl">'</span><span class="k">This will get executed last</span><span class="dl">'</span></span>;
+});
+
+\<span class="co">Scarlet</span>\<span class="co">Reactor</span>::bind(<span class="s"><span class="dl">'</span><span class="k">your.event</span><span class="dl">'</span></span>, <span class="r">function</span>(){
+    <span class="pd">echo</span> <span class="s"><span class="dl">'</span><span class="k">This will get executed first</span><span class="dl">'</span></span>;
+}, <span class="i">100</span>);</code></pre>
+
+<p>Some events pass arguments to their callbacks. These arguments are passed to the callbacks as an array. <strong>It is currently not possible to inject return values from a listener back into the framework.</strong></p>
+
+<h3 id="creating-custom-events">Creating Custom Events</h3>
+
+<p>It is extremely easy to create your own events. Scarlet does not require you to define your events in advance, all you have to do is call a single method:</p>
+
+<pre><code class="language-php">\<span class="co">Scarlet</span>\<span class="co">Reactor</span>::fire(<span class="s"><span class="dl">'</span><span class="k">your.event</span><span class="dl">'</span></span>);</code></pre>
+
+<p>Additionally, you can pass arguments over to the listeners by:</p>
+
+<pre><code class="language-php">\<span class="co">Scarlet</span>\<span class="co">Reactor</span>::fire(<span class="s"><span class="dl">'</span><span class="k">your.event</span><span class="dl">'</span></span>, <span class="lv">$arg_1</span>, <span class="lv">$arg_2</span>, ... , <span class="lv">$arg_n</span>);</code></pre>
+
+<p>Currently, event listeners cannot return values. This is something that may be fixed in a future release.</p>
+        </div>
+        
+        <div id="sidebar">
+            <ol>
+    <li><a href="#introduction-to-events">Introduction to Events</a></li>
+    <li><a href="#creating-event-listeners">Creating Event Listeners</a></li>
+    <li><a href="#creating-custom-events">Creating Custom Events</a></li>
+</ol>
+        </div>
+        
+        <div class="clear"></div>
+    </div>
+    
+    
+    <div id="footer">
+        <div class="container">
+            <p>
+                Copyright &copy; <a href="http://mattkirman.com/">Matt Kirman</a> 2010.<br />
+                <a href="http://scarlet-framework.com/">Scarlet</a> is released under the
+                <a href="http://www.opensource.org/licenses/gpl-2.0.php" target="_blank">GLPv2 Licence</a>.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

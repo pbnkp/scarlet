@@ -34,6 +34,7 @@ h4 { font-size: 19px; margin-bottom: 9px; }
 h5 { font-size: 16px; margin-bottom: 9px; }
 
 p, ul, ol, dl { font-size: 13px; margin-bottom: 26px; }
+ul { list-style-type: square; }
 li { margin-bottom: 4px; }
 dd { margin-bottom: 16px; }
 
@@ -46,6 +47,9 @@ hr { border: 0; border-top: 1px solid #ccc; margin-bottom: 26px; }
 .left { float: left; }
 
 strong, .bold { font-weight: bold; }
+
+
+abbr { border-bottom: 1px dotted #25020f; }
 
 
 #header { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ececec)); border-top: 3px solid #9e1e4c; padding: 37px 0 40px; }
@@ -71,9 +75,9 @@ strong, .bold { font-weight: bold; }
 
 
 #sidebar { float: right; width: 210px; }
-#sidebar ol { margin-left: 30px; }
+#sidebar ol { margin-left: 10px; }
 #sidebar ol li { color: #444; font-weight: bold; }
-#sidebar ol li ul { margin-top: 4px; }
+#sidebar ol li ul { margin-bottom: 0; margin-top: 5px; }
 #sidebar ol li li { font-weight: normal; margin-left: 17px; }
 
 
