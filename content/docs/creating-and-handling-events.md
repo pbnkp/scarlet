@@ -14,7 +14,7 @@ This allows you to write helpers and plugins that can integrate deeply with both
 
 All events, and their listeners, are handled by the <code>\Scarlet\Reactor</code> class. Registering an event listener is as simple as:
 
-<pre><code lang="php">
+<pre><code class="lanugage-php">
 \Scarlet\Reactor::bind($your_event, $your_callback);
 </code></pre>
 
@@ -27,7 +27,7 @@ where <code>$your_event</code> is the name of the event you want to bind to (for
 The <code>bind</code> method also takes a third, optional, parameter called <code>$priority</code>. This is an integer value. Callbacks are executed in the order of priority i.e. priority 100 will get executed before priority 20. The default priority is 50.
 
 *For example:*
-<pre class="no-margin-top"><code lang="php">
+<pre class="no-margin-top"><code class="language-php">
 \Scarlet\Reactor::bind('your.event', function(){
     echo 'This will get executed last';
 });
@@ -44,13 +44,13 @@ Some events pass arguments to their callbacks. These arguments are passed to the
 
 It is extremely easy to create your own events. Scarlet does not require you to define your events in advance, all you have to do is call a single method:
 
-<pre><code lang="php">
+<pre><code class="language-php">
 \Scarlet\Reactor::fire('your.event');
 </code></pre>
 
 Additionally, you can pass arguments over to the listeners by:
 
-<pre><code lang="php">
+<pre><code class="language-php">
 \Scarlet\Reactor::fire('your.event', $arg_1, $arg_2, ... , $arg_n);
 </code></pre>
 
