@@ -1,16 +1,18 @@
 pre {
-  font: 13px "Bitstream Vera Sans Mono", Courier, monospace;
+  font: 12px "Bitstream Vera Sans Mono", Courier, monospace;
   background-color: #232323;
   border: 1px solid black;
   color: #E6E0DB;
   padding: 3px 5px;
   overflow: auto;
-  margin: 0 0 19px;
+  margin: 0px 0 26px;
   text-shadow: 0;
 }
+pre.no-margin-top { margin-top: -19px; }
+pre.no-margin { margin-bottom: 7px; margin-top: -19px; }
 
 pre * {
-  font: 13px "Bitstream Vera Sans Mono", Courier, monospace;
+  font: 12px "Bitstream Vera Sans Mono", Courier, monospace;
 }
 
 pre .an { color:#E7BE69 }                      /* html attribute */
