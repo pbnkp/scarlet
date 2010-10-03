@@ -32,10 +32,10 @@ if (!defined('LAYOUTS'))        define('LAYOUTS', VIEWS . DS . 'layouts');
 if (!defined('CONFIG'))         define('CONFIG', ROOT . DS . 'config');
 if (!defined('DB_DIR'))         define('DB_DIR', ROOT . DS . 'db');
 if (!defined('PUBLIC_DIR'))     define('PUBLIC_DIR', ROOT . DS . 'public');
-if (!defined('SCARLET'))        define('SCARLET', ROOT . DS . 'scarlet');
-if (!defined('CITRUS'))         define('CITRUS', SCARLET . DS . 'citrus');
 if (!defined('TEST_DIR'))       define('TEST_DIR', ROOT . DS . 'test');
 if (!defined('VENDOR'))         define('VENDOR', ROOT . DS . 'vendor');
+if (!defined('SCARLET'))        define('SCARLET', VENDOR . DS . 'scarlet');
+if (!defined('CITRUS'))         define('CITRUS', SCARLET . DS . 'citrus');
 if (!defined('PLUGINS'))        define('PLUGINS', VENDOR . DS . 'plugins');
 
 
