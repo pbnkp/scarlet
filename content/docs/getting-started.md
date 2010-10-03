@@ -8,6 +8,7 @@ sidebar: docs/sidebar/getting_started
 This guide is designed for newcomers who want to get started with a Scarlet application from scratch. It does not assume that you have any prior experience with Scarlet. However, to get the most out of it, you need to have some prerequisites installed:
 
 * The [PHP](http://php.net/) language version 5.3.2 or higher
+* A working installation of the [Apache HTTP server](http://httpd.apache.org/) (or equivalent)
 * A working installation of the [MySQL database](http://mysql.com/)
 
 Scarlet is a web application framework running on the PHP programming language. If you have no prior experience with PHP you will find a steep learning curve diving straight into Scarlet. However, Scarlet leans on common design patterns found in other frameworks (e.g. [Rails](http://rubyonrails.com/)) so in some cases you may find the learning curve not quite so steep.
@@ -52,7 +53,26 @@ Controllers provide the "glue" between models and views. In Scarlet, controllers
 
 #### The Components of Scarlet
 
+Scarlet has been designed to be modular so, even though the various modules ship together, there's no reason why components can't be removed or replaced. The shipping components are:
 
+* Scarlet Core
+* Citrus ORM
+* Scarlet Helpers
+
+
+##### Scarlet Core
+
+Scarlet Core provides the key functionality to the framework including the "VC" part of "MVC", Routing and Event Handling.
+
+
+##### Citrus ORM
+
+Citrus <abbr title="Object Relational Mapper">ORM</abbr> provides the "M" of "MVC" and has been developed specifically for Scarlet and PHP 5.3. It should be possible to drop in other ORMs if Citrus isn't your cup of tea.
+
+
+##### Scarlet Helpers
+
+Scarlet Helpers provide functionality to your view and layouts - the "V" of "MVC".
 
 
 #### REST
@@ -72,3 +92,80 @@ would be understood to refer to a photo resource with the ID of 17, and to indic
 
 
 ### Creating a New Scarlet Project
+
+In this guide we're going to create our own version of the weblog created in the Rails Getting Started guide. Before you can start building the application you're going to have to download a copy of Scarlet:
+
+* **Edge Scarlet (unstable)** &ndash; [http://github.com/mattkirman/scarlet/zipball/master](http://github.com/mattkirman/scarlet/zipball/master)
+
+Once you've downloaded the Scarlet source, extract it into a folder called `blog`.
+
+> You will find Scarlet development on Windows is less pleasant than on other
+> operating systems. If at all possible, we suggest that you install a Linux
+> virtual machine and use that for Scarlet development instead of using Windows.
+
+
+#### Creating the Blog Application
+
+The best way to use this guide is to follow each step as it happens, no code or step needed to make this application has been left out, so you can literally follow along step by step.
+
+To begin, open a terminal, navigate to a folder where you have rights to create files, and copy the Scarlet source files into a new folder:
+
+<pre><code class="language-bash">
+$ mkdir blog
+$ cp -R path_to_scarlet_source blog
+</code></pre>
+
+This will create a Scarlet application in a directory called blog. After you create the blog application, switch to it's folder to continue work directly in that application:
+
+<pre><code class="language-bash">
+$ cd blog
+</code></pre>
+
+Open up that folder and explore it's contents. Most of the work in this tutorial will happen in the <code>app/</code> folder, but here's a basic rundown on the function of each folder that is included in a default Scarlet application:
+
+<table>
+    <thead>
+        <tr>
+            <th>File/Folder</th>
+            <th>Purpose</th>
+        </tr>
+    </thead>
+    
+    <tbody>
+        <tr>
+            <td>app</td>
+            <td>Contains the controllers, models and views for your application.</td>
+        </tr>
+        
+        <tr>
+            <td>config</td>
+            <td>Configure your application's runtime rules, routes, database and more.</td>
+        </tr>
+        
+        <tr>
+            <td>db</td>
+            <td>Shows your current database schema as well as the database migrations.</td>
+        </tr>
+        
+        <tr>
+            <td>log</td>
+            <td>Application log files.</td>
+        </tr>
+        
+        <tr>
+            <td>public</td>
+            <td>The only folder show to world as-is. This is where your images, javascript, stylesheets (CSS) and other static files go.</td>
+        </tr>
+        
+        <tr>
+            <td>test</td>
+            <td>Unit tests, fixtures and other test apparatus.</td>
+        </tr>
+        
+        <tr>
+            <td>vendor</td>
+            <td>A place for all third-party code including the Scarlet Core and third-party plugins.</td>
+        </tr>
+    </tbody>
+</table>
+

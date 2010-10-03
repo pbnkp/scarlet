@@ -14,7 +14,7 @@
 
 
 html, body { background: #ececec; font: 13px "Helvetica Neue", Helvetica, Arial, sans-serif; margin: 0; height: 100%; line-height: 160%; padding: 0; /*text-shadow: 0 -1px 1px #fff;*/ }
-h1, h2, h3, h4, h5, h6, p, ol, ul, li, dl, dt, dd { color: #25020f; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: normal; line-height: 160%; margin: 0; padding: 0; text-shadow: 0 1px 1px #fff; }
+h1, h2, h3, h4, h5, h6, p, ol, ul, li, dl, dt, dd, th, td { color: #25020f; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: normal; line-height: 160%; margin: 0; padding: 0; text-shadow: 0 1px 1px #fff; }
 
 
 a:link, a:visited { border-radius: 3px; color: #9e1e4c; display: inline-block; padding: 0 3px; margin: 0 -3px; text-decoration: none; }
@@ -39,6 +39,15 @@ li { margin-bottom: 4px; }
 dd { margin-bottom: 16px; }
 
 hr { border: 0; border-top: 1px solid #ccc; margin-bottom: 26px; }
+
+blockquote { background: #c4e380; border: 1px solid #b4d370; margin: 0 0 26px; padding: 10px 13px; }
+blockquote :last-child { margin-bottom: 0; }
+
+table { border: 2px solid #ccc; border-collapse: collapse; border-spacing: 0; text-align: left; width: 100%; }
+thead { background: #ddd; }
+th, td { border-bottom: 1px solid #ccc; border-right: 1px solid #ccc; padding: 5px 8px; }
+th { font-weight: bold; }
+thead th, thead td { border-bottom: 2px solid #ccc; }
 
 
 .container { margin: 0 auto; width: 800px; }
