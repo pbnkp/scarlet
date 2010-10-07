@@ -133,39 +133,114 @@ Open up that folder and explore it's contents. Most of the work in this tutorial
     
     <tbody>
         <tr>
-            <td>app</td>
+            <td>scarlet</td>
+            <td>A command line tool to help with scaffolding applications, running tests, etc.</td>
+        </tr>
+        
+        <tr>
+            <td>app/</td>
             <td>Contains the controllers, models and views for your application.</td>
         </tr>
         
         <tr>
-            <td>config</td>
+            <td>config/</td>
             <td>Configure your application's runtime rules, routes, database and more.</td>
         </tr>
         
         <tr>
-            <td>db</td>
+            <td>db/</td>
             <td>Shows your current database schema as well as the database migrations.</td>
         </tr>
         
         <tr>
-            <td>log</td>
+            <td>log/</td>
             <td>Application log files.</td>
         </tr>
         
         <tr>
-            <td>public</td>
+            <td>public/</td>
             <td>The only folder show to world as-is. This is where your images, javascript, stylesheets (CSS) and other static files go.</td>
         </tr>
         
         <tr>
-            <td>test</td>
+            <td>test/</td>
             <td>Unit tests, fixtures and other test apparatus.</td>
         </tr>
         
         <tr>
-            <td>vendor</td>
+            <td>vendor/</td>
             <td>A place for all third-party code including the Scarlet Core and third-party plugins.</td>
         </tr>
     </tbody>
 </table>
+
+
+#### Configuring a Database
+
+The vast majority of web applications will use a database. Citrus, the Scarlet ORM, has been designed to support many different database engines and server setups. Your database configuration is specified in `config/database.php`. If you open this file you'll see a default database configuration using a single MySQL server.
+
+By default, Scarlet can run in one of three different modes. For each of these environments you can define specific database configurations. These environments are:
+
+* **`development`** &ndash; used on your development computer as you develop your application.
+* **`test`** &ndash; used to run tests on your application. *Make sure that this database is different to both your `development` and `production` databases as the `test` database is erased and regenerated every time you run a test*.
+* **`production`** &ndash; used when you deploy your application for the world to use.
+
+
+##### Configuring a MySQL Database
+
+For a typical application the default configuration will be adequate, obviously you will still have to set the parameters to match your database configuration:
+
+<pre><code class="language-php">
+Citrus\Base::config(function($db){
+    $db->addConnection('development', array(
+        'adapter' => 'mysql',
+        'encoding' => 'UTF-8',
+        'database' => 'scarlet',
+        'username' => 'root',
+        'password' => 'root',
+        'host' => 'localhost',
+    ));
+});
+</code></pre>
+
+
+> ###### Setting up Master / Slave Databases
+> 
+> For more complex setups Citrus provides MySQL master/slave capabilities out of the box. Once you've set up your database servers for replication you can then use two optional configuration parameters to tell Citrus how to connect to them:
+> 
+> <pre><code class="language-php">
+> Citrus\Base::config(function($db){
+>     // Set up the master server
+>     $db->addConnection('development', array(
+>         ...
+>         'role' => 'master',
+>         'priority' => 1,
+>     ));
+>     
+>     // And set up the slave
+>     $db->addConnection('development', array(
+>         ...
+>         'role' => 'slave',
+>         'priority' => 3,
+>     ));
+> });
+> </code></pre>
+> 
+> `role` is pretty self-explanatory however, `priority` is somewhat more complex. Occasionally you may want to send more database queries to a particular server rather than splitting the traffic 50/50. The configuration shown above will send 3 out of 4 read requests to the slave.
+> 
+> There is technically no limit to the number of slaves you can add to your configuration. Citrus is also smart enough to automatically switch to your master database for the duration of the request whenever you modify data.
+
+
+#### Creating the Database
+
+Now that you have your database configured, it's time to have Scarlet create an empty database for you. You can do this by running the `scarlet` command from the application root:
+
+<pre><code class="language-bash">
+$ ./scarlet db:create
+</code></pre>
+
+This will create your development and test databases on the servers defined in your database configuration.
+
+
+### Hello, Scarlet!
 

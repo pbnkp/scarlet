@@ -1,5 +1,6 @@
 pre {
   font: 12px "Bitstream Vera Sans Mono", Courier, monospace;
+  line-height: 17px;
   background-color: #232323;
   border: 1px solid black;
   color: #E6E0DB;
