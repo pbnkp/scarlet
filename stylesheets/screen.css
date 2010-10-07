@@ -33,6 +33,8 @@ h4 { font-size: 19px; margin-bottom: 9px; }
 
 h5 { font-size: 16px; margin-bottom: 9px; }
 
+h6 { font-size: 13px; margin-bottom: 9px; }
+
 p, ul, ol, dl { font-size: 13px; margin-bottom: 26px; }
 ul { list-style-type: square; }
 li { margin-bottom: 4px; }
@@ -43,7 +45,7 @@ hr { border: 0; border-top: 1px solid #ccc; margin-bottom: 26px; }
 blockquote { background: #c4e380; border: 1px solid #b4d370; margin: 0 0 26px; padding: 10px 13px; }
 blockquote :last-child { margin-bottom: 0; }
 
-table { border: 2px solid #ccc; border-collapse: collapse; border-spacing: 0; text-align: left; width: 100%; }
+table { border: 2px solid #ccc; border-collapse: collapse; border-spacing: 0; margin-bottom: 26px; text-align: left; width: 100%; }
 thead { background: #ddd; }
 th, td { border-bottom: 1px solid #ccc; border-right: 1px solid #ccc; padding: 5px 8px; }
 th { font-weight: bold; }
