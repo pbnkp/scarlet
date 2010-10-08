@@ -240,18 +240,20 @@ $ cp -R path_to_scarlet_source blog</code></pre>
 
   <p><code>role</code> is pretty self-explanatory however, <code>priority</code> is somewhat more complex. Occasionally you may want to send more database queries to a particular server rather than splitting the traffic 50/50. The configuration shown above will send 3 out of 4 read requests to the slave.</p>
 
-  <p>There is technically no limit to the number of slaves you can add to your configuration - if Citrus is unable to connect to a slave it’ll just move on to the next. Also, Citrus is smart enough to automatically switch to your master database for the duration of the request whenever you modify data.</p>
+  <p>There is technically no limit to the number of slaves you can add to your configuration - if Citrus is unable to connect to a slave it’ll just move on to another. Also, Citrus is smart enough to automatically switch to your master database for the duration of the request whenever you modify data.</p>
 </blockquote>
 
 <h4 id="creating-the-database">Creating the Database</h4>
 
 <p>Now that you have your database configured, it’s time to have Scarlet create an empty database for you. You can do this by running the <code>scarlet</code> command from the application root:</p>
 
-<pre><code class="language-bash">$ ./scarlet db:create</code></pre>
+<pre><code class="language-bash">$ ./scarlet db create</code></pre>
 
 <p>This will create your development and test databases on the servers defined in your database configuration.</p>
 
 <h3 id="hello-scarlet">Hello, Scarlet!</h3>
+
+<p>The traditional way to get started with a new language is by getting some text up on screen quickly. To do this, just point your Apache server at the root of your application.</p>
         </div>
         
         <div id="sidebar">
