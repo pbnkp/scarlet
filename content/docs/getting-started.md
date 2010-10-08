@@ -228,7 +228,7 @@ Citrus\Base::config(function($db){
 > 
 > `role` is pretty self-explanatory however, `priority` is somewhat more complex. Occasionally you may want to send more database queries to a particular server rather than splitting the traffic 50/50. The configuration shown above will send 3 out of 4 read requests to the slave.
 > 
-> There is technically no limit to the number of slaves you can add to your configuration - if Citrus is unable to connect to a slave it'll just move on to the next. Also, Citrus is smart enough to automatically switch to your master database for the duration of the request whenever you modify data.
+> There is technically no limit to the number of slaves you can add to your configuration - if Citrus is unable to connect to a slave it'll just move on to another. Also, Citrus is smart enough to automatically switch to your master database for the duration of the request whenever you modify data.
 
 
 #### Creating the Database
@@ -236,11 +236,13 @@ Citrus\Base::config(function($db){
 Now that you have your database configured, it's time to have Scarlet create an empty database for you. You can do this by running the `scarlet` command from the application root:
 
 <pre><code class="language-bash">
-$ ./scarlet db:create
+$ ./scarlet db create
 </code></pre>
 
 This will create your development and test databases on the servers defined in your database configuration.
 
 
 ### Hello, Scarlet!
+
+The traditional way to get started with a new language is by getting some text up on screen quickly. To do this, just point your Apache server at the root of your application.
 
