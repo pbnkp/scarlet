@@ -240,7 +240,7 @@ $ cp -R path_to_scarlet_source blog</code></pre>
 
   <p><code>role</code> is pretty self-explanatory however, <code>priority</code> is somewhat more complex. Occasionally you may want to send more database queries to a particular server rather than splitting the traffic 50/50. The configuration shown above will send 3 out of 4 read requests to the slave.</p>
 
-  <p>There is technically no limit to the number of slaves you can add to your configuration. Citrus is also smart enough to automatically switch to your master database for the duration of the request whenever you modify data.</p>
+  <p>There is technically no limit to the number of slaves you can add to your configuration - if Citrus is unable to connect to a slave it’ll just move on to the next. Also, Citrus is smart enough to automatically switch to your master database for the duration of the request whenever you modify data.</p>
 </blockquote>
 
 <h4 id="creating-the-database">Creating the Database</h4>
