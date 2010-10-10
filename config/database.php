@@ -11,7 +11,7 @@ Citrus\Base::config(function($db){
    $db->addConnection('development', array(
        'adapter' => 'mysql',
        'encoding' => 'UTF-8',
-       'database' => 'scarlet',
+       'database' => 'scarlet_development',
        'username' => 'root',
        'password' => 'root',
        'host' => 'localhost',
