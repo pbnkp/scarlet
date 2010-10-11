@@ -30,12 +30,13 @@ class Controller
     
     
     /**
-     * Our default helpers. You can disable them by with no side effects.
+     * The helpers that the views should use. Some common helpers that you may want
+     * to include are \Scarlet\Helpers\Html and \Scarlet\Helpers\Form
      * 
      * @access protected
      * @var array
      */
-    protected $helpers = array('\Scarlet\Helpers\Html', '\Scarlet\Helpers\Form');
+    protected $helpers = array();
     
     
     protected $beforeFilters = array();
