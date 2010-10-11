@@ -22,6 +22,7 @@ class Controller
     
     public $data = array();
     public $params = array();
+    public $format = array();
     
     
     protected $layout = 'application';

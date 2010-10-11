@@ -155,6 +155,7 @@ class Kernel
 
         $Controller = new $Controller();
         $Controller->params = $Router->getParams();
+        $Controller->format = $Router->getFormat();
         
         
         // Run the action
@@ -173,10 +174,10 @@ class Kernel
         
         
         // Render the view.
-        $View = new View($Controller, $Controller->getView());
+        $View = new View($Controller, $Controller->getView(), $Router->getFormat());
         
         // And then the layout.
-        $Layout = new View($Controller, $Controller->getLayout(), 'layout', $View->content(true));
+        $Layout = new View($Controller, $Controller->getLayout(), $Router->getFormat(), 'layout', $View->content(true));
         
         echo $Layout->content();
     }

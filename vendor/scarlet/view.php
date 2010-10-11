@@ -29,6 +29,7 @@ class View
     
     protected $Controller;
     protected $view_folder;
+    protected $format;
     
     
     protected $data;
@@ -46,15 +47,17 @@ class View
      * @access public
      * @param object $Controller The controller object
      * @param string $view The view file to render
+     * @param string $format The format that we're rendering
      * @param string $type The type of file we're rendering. Can be either 'view',
      *                      'layout' or 'partial'. Defaults to 'view'.
      * @return object
      */
-    public function __construct($Controller, $view, $type = 'view', $content = '')
+    public function __construct($Controller, $view, $format, $type = 'view', $content = '')
     {
         $this->Controller =& $Controller;
         $this->data =& $this->Controller->data;
         $this->params =& $this->Controller->params;
+        $this->format = $format;
         
         $type = strtolower($type);
         switch ($type) {
@@ -76,13 +79,13 @@ class View
                 break;
         }
         
-        $viewfile .= '.php';
+        $viewfile .= ".{$this->format}.php";
         
         if (!file_exists($viewfile)) {
             // We can't find the viewfile, so if we're in debug mode throw an exception
             if (Environment::getInstance()->isDebug()) {
                 $prefix = ($type == 'partial') ? '_' : '';
-                throw new \Exception("Missing template $controller/$prefix$action");
+                throw new \Exception("Missing template $controller/$prefix$action.{$this->format}.php");
             } else {
                 // If this is a view or layout then go 404
                 if ($type != 'partial') {
@@ -213,7 +216,7 @@ class View
             $partial = $this->view_folder . '/' . $partial;
         }
         
-        $View = new View($this->Controller, $partial, 'partial', $data);
+        $View = new View($this->Controller, $partial, $this->format, 'partial', $data);
         return $View->content();
     }
     

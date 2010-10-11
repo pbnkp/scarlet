@@ -15,6 +15,7 @@ class Router
     private $controller, $controller_name;
     private $action, $id;
     private $params;
+    private $format;
     public $route_found = false;
     
     
@@ -66,6 +67,12 @@ class Router
     {
         return $this->params;
     }
+
+
+    public function getFormat()
+    {
+        return $this->format;
+    }
     
     
     public function root($target)
@@ -109,13 +116,14 @@ class Router
         $params = $route->params;
         $this->controller = $params['controller']; unset($params['controller']);
         $this->action = (isset($params['action'])) ? $params['action'] : null; unset($params['action']);
-        $this->id = (isset($params['id'])) ? $params['id'] : false; 
+        $this->id = (isset($params['id'])) ? $params['id'] : false;
+        $this->format = $route->format;
         $this->params = array_merge($params, $_GET);
         
         if (empty($this->controller)) $this->controller = $this->_default_controller;
         if (empty($this->action)) $this->action = $this->_default_action;
         if (empty($this->id)) $this->id = null;
-        
+
         $this->controller_name = $this->controller . '_controller';
     }
     
@@ -135,6 +143,7 @@ class Router
 class Route {
     public $is_matched = false;
     public $params;
+    public $format;
     public $url;
     private $conditions;
     private $url_regex;
@@ -154,6 +163,13 @@ class Route {
         $url_regex = preg_replace_callback('@:[\w]+@', array($this, 'regex_url'), $url);
         $url_regex .= '/?';
         $this->url_regex = $url_regex;
+
+        if (preg_match('/(.*)\.([a-z]+)$/i', $request_uri, $match)) {
+            $request_uri = $match[1];
+            $this->format = $match[2];
+        } else {
+            $this->format = 'html';
+        }
         
         if (preg_match('@^' . $url_regex . '$@', $request_uri, $p_values)) {
             array_shift($p_values);
