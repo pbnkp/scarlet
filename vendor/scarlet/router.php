@@ -155,7 +155,7 @@ class Route {
         $this->conditions = $conditions;
         $p_names = array(); $p_values = array();
 
-        $url = str_replace(array('(',')'), array('((', ')?)'), $url);
+        $url = str_replace(array('(',')'), array('(', ')?'), $url);
         
         preg_match_all('@:([\w]+)@', $url, $p_names, PREG_PATTERN_ORDER);
         $p_names = $p_names[0];
@@ -170,11 +170,12 @@ class Route {
         } else {
             $this->format = 'html';
         }
-        
+
         if (preg_match('@^' . $url_regex . '$@', $request_uri, $p_values)) {
             array_shift($p_values);
+
             foreach($p_names as $index => $value)
-                $this->params[substr($value,1)] = str_replace('/', '', urldecode($p_values[$index]));
+                $this->params[substr($value,1)] = (isset($p_values[$index])) ? str_replace('/', '', urldecode($p_values[$index])) : false;
             
             foreach($target as $key => $value)
                 $this->params[$key] = str_replace('/', '', $value);
@@ -193,7 +194,7 @@ class Route {
         if (array_key_exists($key, $this->conditions)) {
             return '('.$this->conditions[$key].')';
         } else {
-            return '([a-zA-Z0-9_\+\-%]+)';
+            return '([a-zA-Z0-9_-]+)';
         }
     }
 }
