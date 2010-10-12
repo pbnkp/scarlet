@@ -22,13 +22,35 @@ class Query
 {
     
     /**
+     * The model that is creating this query.
+     * 
+     * @access private
+     * @var object
+     */
+    private $_Model = false;
+    
+    
+    /**
+     * Keeps a record of paramaters associated with this query e.g. WHERE conditions, etc.
+     * 
+     * @access private
+     * @var array
+     **/
+    private $_params = array(
+        'limit' => false,
+        'where' => array(),
+    );
+    
+    
+    /**
      * The constructor.
      *
      * @access public
+     * @param string $Model The model creating this query
      */
-    public function __construct()
+    public function __construct($Model=false)
     {
-        
+        $this->_Model =& $Model;
     }
     
     
@@ -37,11 +59,12 @@ class Query
      *
      * @access public
      * @static
+     * @param object $Model The model creating this query
      * @return object $this
      */
-    public static function __new()
+    public static function __new($Model=false)
     {
-        return new Query();
+        return new Query($Model);
     }
     
     
@@ -88,6 +111,102 @@ class Query
         }
         
         return array($primary, $columns);
+    }
+    
+    
+    /**
+     * Adds conditions to the SQL statement. By default we perform a "WHERE X=Y"
+     * however, you can also perform:
+     *      =, !=, >, <, like, between, is
+     * 
+     * Conditions can be set by:
+     *      ->where("$your_column", "$value")           : matches $your_column = $value
+     *      ->where("$your_column", "$operator $value") : matches $your_column $operator $value
+     * 
+     * In addition, you can also specify whether you are doing an "AND" or an
+     * "OR" condition.
+     *
+     * @access  public
+     * @param string $column The name of the column to perform the WHERE on
+     * @param string $value The value of the column to match.
+     * @param string $type Either an AND or OR. Defaults to AND.
+     * @return  object $this For chaining
+     */
+    public function where($column, $value, $type='AND')
+    {
+        $operators = array('=', '!=', '>', '<', 'like', 'between', 'is');
+        
+        $operator = explode(' ', $value);
+        $operator = strtolower($operator[0]);
+        if (!in_array($operator, $operators)) {
+            $operator = '=';
+        } else {
+            $value = explode(' ', $value);
+            $operator = $value[0];
+            unset($value[0]);
+            $value = implode(' ', $value);
+        }
+        
+        $this->_params['where'][] = array(
+            'column' => $column,
+            'operator' => $operator,
+            'value' => $value,
+            'type' => $type,
+        );
+        
+        return $this;
+    }
+    
+    
+    /**
+     * Convenience method for where('column', 'value', 'AND')
+     *
+     * @access public
+     * @final
+     * @param string $columnName The name of the column to perform the WHERE statement on
+     * @param string $value The value of the column to look up. By default this is
+     *                          a = where, however you can prepend any operator to this
+     *                          value (such as >, < or LIKE)
+     * @return object $this
+     */
+    final public function andWhere($columnName, $value)
+    {
+        return $this->where($columnName, $value, 'AND');
+    }
+    
+    
+    /**
+     * Convenience method for where('column', 'value', 'OR')
+     *
+     * @access public
+     * @final
+     * @param string $columnName The name of the column to perform the WHERE statement on
+     * @param string $value The value of the column to look up. By default this is
+     *                          a = where, however you can prepend any operator to this
+     *                          value (such as >, < or LIKE)
+     * @return object $this
+     */
+    final public function orWhere($columnName, $value)
+    {
+        return $this->where($columnName, $value, 'OR');
+    }
+    
+    
+    /**
+     * Performs a SQL LIMIT. The LIMIT statement will be automatically added to the
+     * query, simply state by how many results you want. You can only call this once
+     * per query. Calling this multiple times will simply overwrite the previous
+     * LIMIT statement.
+     *
+     * @access public
+     * @final
+     * @param int $limit The maximum number of results to return.
+     * @return object $this
+     */
+    final public function limit($limit)
+    {
+        $this->_params['limit'] = $limit;
+        return $this;
     }
     
 }

@@ -334,12 +334,14 @@ class Model
         if ($field === false) $field = $this->_primaryKey;
         if (!array_key_exists($field, $this->_columns)) throw new \Exception("Unknown column '$field'");
         
-        var_dump(array('value' => $value, 'field' => $field, 'limit' => $limit));
+        $q = $this->query()->where($field, $value);
+        if ($limit > 0) $q = $q->limit($limit);
+        return $q;
     }
     
     
     /**
-     * Creates a new query for the model.
+     * Creates a new query object for the model.
      *
      * @access private
      * @final
@@ -347,7 +349,7 @@ class Model
      */
     final public function query()
     {
-        
+        return Query::__new($this);
     }
     
     
