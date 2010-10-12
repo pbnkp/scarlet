@@ -20,7 +20,7 @@ namespace Citrus;
  */
 class Query
 {
-
+    
     /**
      * The constructor.
      *
@@ -30,8 +30,8 @@ class Query
     {
         
     }
-
-
+    
+    
     /**
      * An alternative to 'new Query()' so that we can support chaining.
      *
@@ -43,8 +43,8 @@ class Query
     {
         return new Query();
     }
-
-
+    
+    
     /**
      * Performs a simple SQL query, bypassing all ORM features. However, that
      * doesn't mean that it isn't actually used by the ORM.
@@ -59,8 +59,8 @@ class Query
         $q = Base::connectionManager()->getConnection()->query($sql);
         return ($all) ? $q->fetchAll() : $q;
     }
-
-
+    
+    
     /**
      * Describes a table, mapping the returned columns into some sane defaults
      * that Citrus can then understand.
@@ -75,7 +75,7 @@ class Query
         
         $primary = '';
         $columns = array();
-
+        
         foreach ($q as $r) {
             $columns[$r['Field']] = array(
                 'type' => $r['Type'],
@@ -83,11 +83,11 @@ class Query
                 'key' => (empty($r['Key'])) ? false : $r['Key'],
                 'default' => $r['Default'],
             );
-
+            
             if ($r['Key'] == 'PRI') $primary = $r['Field'];
         }
-
+        
         return array($primary, $columns);
     }
-
+    
 }

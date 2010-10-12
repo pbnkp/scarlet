@@ -20,7 +20,7 @@ namespace Citrus;
  */
 class Model
 {
-
+    
     /**
      * The table that this model uses.
      *
@@ -28,8 +28,8 @@ class Model
      * @var string
      */
     protected $_table;
-
-
+    
+    
     /**
      * A record of relationships that this model has.
      *
@@ -42,8 +42,8 @@ class Model
         'has_many' => array(),
         'has_and_belongs_to_many' => array(),
     );
-
-
+    
+    
     /**
      * A record of validations that this model has.
      *
@@ -56,8 +56,8 @@ class Model
         'validate_presence_of' => array(),
         'validate_type_of' => array(),
     );
-
-
+    
+    
     /**
      * The columns that are in this table.
      *
@@ -65,8 +65,8 @@ class Model
      * @var object
      */
     private $_columns;
-
-
+    
+    
     /**
      * The primary key for this table, of false if there isn't one.
      *
@@ -74,8 +74,8 @@ class Model
      * @var string|false
      */
     private $_primaryKey;
-
-
+    
+    
     /**
      * If you define your own constructor for your model make sure you call
      * parent::__construct(). You should almost never have to modify the constructor,
@@ -98,12 +98,12 @@ class Model
             $table = array_pop($class);
             $this->_table = \Scarlet\Inflector::underscore($table);
         }
-
+        
         // Enumerate the table so we know which fields exist and what type they are
         list($this->_primaryKey, $this->_columns) = Base::getInstance()->enumerateTable($this->_table);
     }
-
-
+    
+    
     /**
      * Add a belongs_to relationship to the model. For example, a comment belongs
      * to a user. Should only be called in __setup().
@@ -120,8 +120,8 @@ class Model
         $defaults = array();
         $this->_relationships['belongs_to'][$model] = array_merge($defaults, $options);
     }
-
-
+    
+    
     /**
      * Add a has_one relationship to the model. For example, a user has one name.
      * Should only be called in __setup().
@@ -138,8 +138,8 @@ class Model
         $defaults = array();
         $this->_relationships['has_one'][$model] = array_merge($defaults, $options);
     }
-
-
+    
+    
     /**
      * Add a has_many relationship to this model. For example, a user has many
      * emails. Should only be called in __setup().
@@ -156,8 +156,8 @@ class Model
         $defaults = array();
         $this->_relationships['has_many'][$model] = array_merge($defaults, $options);
     }
-
-
+    
+    
     /**
      * Add a has_and_belongs_to_many relationship to this model. For example, an object
      * has many colours and a colour can be on many objects.
@@ -174,8 +174,8 @@ class Model
         $defaults = array();
         $this->_relationships['has_and_belongs_to_many'][$model] = array_merge($defaults, $options);
     }
-
-
+    
+    
     /**
      * Validates the attributes' values by testing whether they match a given
      * regular expression.
@@ -191,8 +191,8 @@ class Model
     {
         $this->_validations['validate_format_of'][$attribute] = array('regex' => $regex, 'message' => $message);
     }
-
-
+    
+    
     /**
      * Validates the attribute's values by testing that they are longer/shorter
      * (if the attribute is a string or an array) or greater/less than (if an
@@ -234,7 +234,7 @@ class Model
                 case 'eq': $type = 'equal'; break;
                 default: $type = false;
             }
-
+            
             if ($type !== false) {
                 $this->_validations['validate_length_of'][$attribute] = array(
                     'type' => $type,
@@ -244,17 +244,17 @@ class Model
             }
         }
     }
-
-
+    
+    
     /**
      *
      */
     final protected function validateTypeOf()
     {
-
+        
     }
-
-
+    
+    
     /**
      * Returns the array or relationships. If 'type' is set then we just return
      * an array of relationships matching that particular type.
@@ -270,8 +270,8 @@ class Model
         $type = \Scarlet\Inflector::underscore($type);
         return (isset($this->_relationships[$type])) ? $this->_relationships[$type] : array();
     }
-
-
+    
+    
     /**
      * Returns the array of validations. If 'type' is set then we just return an
      * array of validation matching that particular type.
@@ -287,8 +287,8 @@ class Model
         $type = \Scarlet\Inflector::underscore($type);
         return (isset($this->_validations[$type])) ? $this->_validations[$type] : array();
     }
-
-
+    
+    
     /**
      * Sets an alternate name to use for the table. Bypasses inflectors, so be
      * careful with your naming.
@@ -302,8 +302,8 @@ class Model
     {
         $this->_table = $name;
     }
-
-
+    
+    
     /**
      * Returns the name of the table that we're currently using for this model.
      *
@@ -315,8 +315,8 @@ class Model
     {
         return $this->_table;
     }
-
-
+    
+    
     /**
      * Performs various types of find operations on the model. Direct use of this
      * method is not recommended, instead use one of the magic methods e.g.
@@ -336,8 +336,8 @@ class Model
         
         var_dump(array('value' => $value, 'field' => $field, 'limit' => $limit));
     }
-
-
+    
+    
     /**
      * Creates a new query for the model.
      *
@@ -347,10 +347,10 @@ class Model
      */
     final public function query()
     {
-
+        
     }
-
-
+    
+    
     /**
      * Catches calls to undefined methods. We use it to provide magic methods such
      * as findById() and findOneById().
@@ -366,15 +366,15 @@ class Model
             if (strstr($name, 'findBy') !== false)
                 // We're looking for all records that match
                 return $this->_find($arguments[0], \Scarlet\Inflector::underscore(str_replace('findBy', '', $name)));
-
+                
             if (strstr($name, 'findOneBy') !== false)
                 // We're looking for a single record that matches
                 return $this->_find($arguments[0], \Scarlet\Inflector::underscore(str_replace('findOneBy', '', $name)), 1);
-
+                
             // By default, we assume that they're looking for a primary key
             return $this->_find($arguments[0], false, 1);
             
         }
     }
-
+    
 }
