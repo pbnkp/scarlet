@@ -332,6 +332,8 @@ class Model
     private function _find($value, $field=false, $limit=0)
     {
         if ($field === false) $field = $this->_primaryKey;
+        if (!array_key_exists($field, $this->_columns)) throw new \Exception("Unknown column '$field'");
+        
         var_dump(array('value' => $value, 'field' => $field, 'limit' => $limit));
     }
 
