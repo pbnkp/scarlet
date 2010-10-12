@@ -94,20 +94,22 @@ class Model
      */
     public function __construct()
     {
-        // Get the name of the model that we're implementing. We use this to
-        // create our default table name.
-        $class = explode('\\', get_class($this));
-        $table = array_pop($class);
-
-        if (!isset($this->_table))
-            $this->_table = \Scarlet\Inflector::underscore($table);
-
-        // Enumerate the table so we know which fields exist and what type they are
-        $etable = Base::getInstance()->enumerateTable($this->_table);
-
+        // Our __setup method contains functions that should be run pre-constructor.
+        // Use it to modify table names, validations, relationships etc.
         if (method_exists($this, '__setup')) {
             $this->__setup();
         }
+        
+        // Get the name of the model that we're implementing. We use this to
+        // create our default table name.
+        if (!isset($this->_table)) {
+            $class = explode('\\', get_class($this));
+            $table = array_pop($class);
+            $this->_table = \Scarlet\Inflector::underscore($table);
+        }
+
+        // Enumerate the table so we know which fields exist and what type they are
+        $etable = Base::getInstance()->enumerateTable($this->_table);
     }
 
 
@@ -193,6 +195,147 @@ class Model
         // Default options for this type of relationship
         $defaults = array();
         $this->_relationships['has_and_belongs_to_many'][$model] = array_merge($defaults, $options);
+    }
+
+
+    /**
+     * Validates the attributes' values by testing whether they match a given
+     * regular expression.
+     *
+     * @access protected
+     * @final
+     * @param string $attribute The attribute to validate
+     * @param string $regex The regular expression to validate against
+     * @param string $message An (optional) message to throw when the validation fails
+     * @return void
+     */
+    final protected function validateFormatOf($attribute, $regex, $message=null)
+    {
+        $this->_validations['validate_format_of'][$attribute] = array('regex' => $regex, 'message' => $message);
+    }
+
+
+    /**
+     * Validates the attribute's values by testing that they are longer/shorter
+     * (if the attribute is a string or an array) or greater/less than (if an
+     * integer) the required value.
+     *
+     * You can specify a range or valid values by passing a length in the following
+     * format:
+     *      X..Y
+     *
+     * All values greater than or equal to X and less than or equal to Y would be
+     * classed as valid.
+     *
+     * @access protected
+     * @final
+     * @param string $attribute The attribute to validate
+     * @param int|string $length The minimum or maximum size that the attribute can be.
+     *                              You can specify a range with double dots e.g.
+     *                                  2..5
+     *                              would match all values between two and five. If
+     *                              you're using ranges then $direction is ignored.
+     * @param string $direction Can be either 'eq', 'lt' or 'gt'. Default is 'eq'.
+     * @param string $message An (optional) message to throw when the validation fails
+     * @return void
+     */
+    final protected function validateLengthOf($attribute, $length, $direction='eq', $message=null)
+    {
+        if (strstr($length, '..') !== false) {
+            $range = explode('..', $length);
+            $this->_validations['validate_length_of'][$attribute] = array(
+                'type' => 'range',
+                'min' => $range[0],
+                'max' => $range[1],
+                'message' => $message,
+            );
+        } else {
+            switch ($direction) {
+                case 'gt': $type = 'greater_than'; break;
+                case 'lt': $type = 'less_than'; break;
+                case 'eq': $type = 'equal'; break;
+                default: $type = false;
+            }
+
+            if ($type !== false) {
+                $this->_validations['validate_length_of'][$attribute] = array(
+                    'type' => $type,
+                    'length' => $length,
+                    'message' => $message,
+                );
+            }
+        }
+    }
+
+
+    /**
+     *
+     */
+    final protected function validateTypeOf()
+    {
+
+    }
+
+
+    /**
+     * Returns the array or relationships. If 'type' is set then we just return
+     * an array of relationships matching that particular type.
+     *
+     * @access public
+     * @final
+     * @param string $type The type of relationship to return. Optional
+     * @return array
+     */
+    final public function getRelationships($type=false)
+    {
+        if ($type === false) return $this->_relationships;
+        $type = \Scarlet\Inflector::underscore($type);
+        return (isset($this->_relationships[$type])) ? $this->_relationships[$type] : array();
+    }
+
+
+    /**
+     * Returns the array of validations. If 'type' is set then we just return an
+     * array of validation matching that particular type.
+     *
+     * @access public
+     * @final
+     * @param string $type The type of validation to return. Optional
+     * @return array
+     */
+    final public function getValidations($type=false)
+    {
+        if ($type === false) return $this->_validations;
+        $type = \Scarlet\Inflector::underscore($type);
+        return (isset($this->_validations[$type])) ? $this->_validations[$type] : array();
+    }
+
+
+    /**
+     * Sets an alternate name to use for the table. Bypasses inflectors, so be
+     * careful with your naming.
+     *
+     * @access public
+     * @final
+     * @param string $name The name of the table to use for this model
+     * @return void
+     */
+    final public function setTable($name)
+    {
+        $this->_table = $name;
+    }
+
+
+    /**
+     * Returns the name of the table that we're currently using for this model.
+     *
+     * @access public
+     * @final
+     * @return string
+     */
+    final public function getTable()
+    {
+        return $this->_table;
     }
 
 }
