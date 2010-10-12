@@ -56,7 +56,7 @@ class Query
      */
     public function sql($sql, $all=false)
     {
-        $q = Base::getInstance()->getConnection()->query($sql);
+        $q = Base::connectionManager()->getConnection()->query($sql);
         return ($all) ? $q->fetchAll() : $q;
     }
 

@@ -94,6 +94,20 @@ class Base
 
 
     /**
+     * Returns an instance of ConnectionManager. Use this rather than going directly
+     * to the method as things may change.
+     *
+     * @access public
+     * @static
+     * @return object
+     */
+    public static function connectionManager()
+    {
+        return ConnectionManager::getInstance();
+    }
+
+
+    /**
      * Adds a database connection.
      *
      * @access public
@@ -105,6 +119,8 @@ class Base
      */
     public function addConnection($environment, $connection)
     {
+        //ConnectionManager::addConnection($environment, $connection);
+
         $dsn = "{$connection['adapter']}:dbname={$connection['database']};host={$connection['host']};charset={$connection['encoding']}";
         $username = $connection['username'];
         $password = $connection['password'];
