@@ -174,8 +174,15 @@ class Route {
         if (preg_match('@^' . $url_regex . '$@', $request_uri, $p_values)) {
             array_shift($p_values);
 
+            // Removes any poorly formatted url fragments left over from our
+            // nested optional routes.
+            foreach ($p_values as $i => $v)
+                if (strstr($v, '/') !== false) unset($p_values[$i]);
+                
+            $p_values = array_values($p_values);
+
             foreach($p_names as $index => $value)
-                $this->params[substr($value,1)] = (isset($p_values[$index])) ? str_replace('/', '', urldecode($p_values[$index])) : false;
+                $this->params[substr($value,1)] = (isset($p_values[$index])) ? urldecode($p_values[$index]) : false;;
             
             foreach($target as $key => $value)
                 $this->params[$key] = str_replace('/', '', $value);
