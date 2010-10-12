@@ -93,9 +93,6 @@ class Router
     public function default_routes()
     {
         $this->root('home#index');
-        #$this->match('/:controller');
-        #$this->match('/:controller/:action');
-        #$this->match('/:controller/:action/:id');
     }
     
     
