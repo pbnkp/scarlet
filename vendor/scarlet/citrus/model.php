@@ -105,19 +105,6 @@ class Model
 
 
     /**
-     * Creates a new query for the model.
-     *
-     * @access private
-     * @final
-     * @return object Query
-     */
-    final public function query()
-    {
-        
-    }
-
-
-    /**
      * Add a belongs_to relationship to the model. For example, a comment belongs
      * to a user. Should only be called in __setup().
      *
@@ -327,6 +314,65 @@ class Model
     final public function getTable()
     {
         return $this->_table;
+    }
+
+
+    /**
+     * Performs various types of find operations on the model. Direct use of this
+     * method is not recommended, instead use one of the magic methods e.g.
+     * findById() and findOneById() etc.
+     *
+     * @access public
+     * @final
+     * @param string|int $value The value to find.
+     * @param string $field The field to do the find on. Defaults to the primary key.
+     * @param int $limit The maximum number of records to return. Default to return all.
+     * @return mixed
+     */
+    private function _find($value, $field=false, $limit=0)
+    {
+        if ($field === false) $field = $this->_primaryKey;
+        var_dump(array('value' => $value, 'field' => $field, 'limit' => $limit));
+    }
+
+
+    /**
+     * Creates a new query for the model.
+     *
+     * @access private
+     * @final
+     * @return object Query
+     */
+    final public function query()
+    {
+
+    }
+
+
+    /**
+     * Catches calls to undefined methods. We use it to provide magic methods such
+     * as findById() and findOneById().
+     *
+     * @access public
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        if (strstr($name, 'find') !== false) { // Catch method calls beginning with 'find'
+            if (strstr($name, 'findBy') !== false)
+                // We're looking for all records that match
+                return $this->_find($arguments[0], \Scarlet\Inflector::underscore(str_replace('findBy', '', $name)));
+
+            if (strstr($name, 'findOneBy') !== false)
+                // We're looking for a single record that matches
+                return $this->_find($arguments[0], \Scarlet\Inflector::underscore(str_replace('findOneBy', '', $name)), 1);
+
+            // By default, we assume that they're looking for a primary key
+            return $this->_find($arguments[0], false, 1);
+            
+        }
     }
 
 }
