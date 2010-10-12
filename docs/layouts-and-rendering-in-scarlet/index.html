@@ -59,11 +59,11 @@
     
 }</code></pre>
 
-<p>And you have a view file in <code>app/view/product/index.php</code>:</p>
+<p>And you have a view file in <code>app/view/product/index.html.php</code>:</p>
 
 <pre><code class="language-html"><span class="ta">&lt;h1&gt;</span>Some products will be coming soon!<span class="ta">&lt;/h1&gt;</span></code></pre>
 
-<p>Scarlet will automatically render <code>app/view/product/index.php</code> when you navigate to <code>/product</code> and you will see on your screen that “Some products will be coming soon!”.</p>
+<p>Scarlet will automatically render <code>app/view/product/index.html.php</code> when you navigate to <code>/product</code> and you will see on your screen that “Some products will be coming soon!”.</p>
 
 <h3 id="using-layouts">Using Layouts</h3>
 
@@ -143,11 +143,11 @@
 
 <pre><code class="language-php"><span class="idl">&lt;?php</span> <span class="pd">echo</span> <span class="lv">$this</span>-&gt;partial(<span class="s"><span class="dl">'</span><span class="k">menu</span><span class="dl">'</span></span>); <span class="idl">?&gt;</span></code></pre>
 
-<p>This will render a file named <code>_menu.php</code> at that point within the view being rendered.  Note the leading underscore character: partials are named with a leading underscore to distinguish them from regular views, even though they are referred to without the underscore. This holds true even when you’re pulling in a partial from another folder:</p>
+<p>This will render a file named <code>_menu.html.php</code> at that point within the view being rendered.  Note the leading underscore character: partials are named with a leading underscore to distinguish them from regular views, even though they are referred to without the underscore. This holds true even when you’re pulling in a partial from another folder:</p>
 
 <pre><code class="language-php"><span class="idl">&lt;?php</span> <span class="pd">echo</span> <span class="lv">$this</span>-&gt;partial(<span class="s"><span class="dl">'</span><span class="k">shared/menu</span><span class="dl">'</span></span>); <span class="idl">?&gt;</span></code></pre>
 
-<p>This code will pull in the partial from <code>app/views/shared/_menu.php</code>.</p>
+<p>This code will pull in the partial from <code>app/views/shared/_menu.html.php</code>.</p>
 
 <h5 id="using-partials-to-simplify-views">Using Partials to Simplify Views</h5>
 
