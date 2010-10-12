@@ -109,7 +109,7 @@ class Model
         }
 
         // Enumerate the table so we know which fields exist and what type they are
-        $etable = Base::getInstance()->enumerateTable($this->_table);
+        list($this->_primaryKey, $this->_columns) = Base::getInstance()->enumerateTable($this->_table);
     }
 
 

@@ -76,11 +76,10 @@ class Query
         $columns = array();
 
         foreach ($q as $r) {
-            $columns[] = array(
-                'field' => $r['Field'],
+            $columns[$r['Field']] = array(
                 'type' => $r['Type'],
                 'null' => (strtolower($r['Null']) == 'no') ? false : true,
-                'key' => $r['Key'],
+                'key' => (empty($r['Key'])) ? false : $r['Key'],
                 'default' => $r['Default'],
             );
 
