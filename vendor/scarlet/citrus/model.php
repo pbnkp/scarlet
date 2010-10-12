@@ -22,15 +22,6 @@ class Model
 {
 
     /**
-     * The cached database connection
-     *
-     * @access private
-     * @var resource
-     */
-    private $_db;
-
-
-    /**
      * The table that this model uses.
      *
      * @access protected

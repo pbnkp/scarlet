@@ -46,7 +46,8 @@ class Query
 
 
     /**
-     * Performs a simple SQL query, bypassing all ORM features.
+     * Performs a simple SQL query, bypassing all ORM features. However, that
+     * doesn't mean that it isn't actually used by the ORM.
      *
      * @access public
      * @param string $sql The SQL to perform
