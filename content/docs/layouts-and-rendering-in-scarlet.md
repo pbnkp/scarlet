@@ -31,13 +31,13 @@ class ProductController extends ApplicationController
 }
 </code></pre>
 
-And you have a view file in `app/view/product/index.php`:
+And you have a view file in `app/view/product/index.html.php`:
 
 <pre><code class="language-html">
 &lt;h1&gt;Some products will be coming soon!&lt;/h1&gt;
 </code></pre>
 
-Scarlet will automatically render `app/view/product/index.php` when you navigate to `/product` and you will see on your screen that "Some products will be coming soon!".
+Scarlet will automatically render `app/view/product/index.html.php` when you navigate to `/product` and you will see on your screen that "Some products will be coming soon!".
 
 
 ### Using Layouts
@@ -129,13 +129,13 @@ To render a partial as part of a view you use the `partial` method and include t
 &lt;?php echo $this->partial('menu'); ?&gt;
 </code></pre>
 
-This will render a file named `_menu.php` at that point within the view being rendered.  Note the leading underscore character: partials are named with a leading underscore to distinguish them from regular views, even though they are referred to without the underscore. This holds true even when you're pulling in a partial from another folder:
+This will render a file named `_menu.html.php` at that point within the view being rendered.  Note the leading underscore character: partials are named with a leading underscore to distinguish them from regular views, even though they are referred to without the underscore. This holds true even when you're pulling in a partial from another folder:
 
 <pre><code class="language-php">
 &lt;?php echo $this->partial('shared/menu'); ?&gt;
 </code></pre>
 
-This code will pull in the partial from `app/views/shared/_menu.php`.
+This code will pull in the partial from `app/views/shared/_menu.html.php`.
 
 
 ##### Using Partials to Simplify Views
