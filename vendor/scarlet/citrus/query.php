@@ -50,7 +50,7 @@ class Query
      */
     public function __construct($Model=false)
     {
-        $this->_Model =& $Model;
+        $this->_Model = $Model;
     }
     
     
