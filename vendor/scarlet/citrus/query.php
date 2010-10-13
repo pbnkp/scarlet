@@ -158,6 +158,7 @@ class Query extends Iterator
         // cached PDO query.
         $sql = $this->_buildSQL();
         $this->_query = $this->sql($sql);
+        $this->_executed = true;
 
         // Return all records immediately, if required. Otherwise we fall back
         // to the default method of lazy loading the results.
@@ -172,8 +173,20 @@ class Query extends Iterator
             }
         }
 
-        $this->_executed = true;
         return $this;
+    }
+
+
+    /**
+     * Returns the number of rows in this query.
+     *
+     * @access public
+     * @return int
+     */
+    public function rowCount()
+    {
+        if (!$this->_executed) $this->execute();
+        return $this->_query->rowCount();
     }
 
 
@@ -185,7 +198,31 @@ class Query extends Iterator
      */
     public function save()
     {
-        
+        $params = $this->_Model->toArray();
+
+        if ($this->_Model->_isNew()) {
+            // This is a new record, so insert it into the database
+            var_dump($params);
+            $columns = array();
+            $values = array();
+
+            foreach ($params as $c => $v) {
+                $columns[] = "`$c`";
+                $values[] = "'$v'";
+            }
+            
+            $columns = implode(',', $columns);
+            $values = implode(',', $values);
+            
+            $sql = "INSERT INTO `{$this->_Model->getTable()}` ({$columns}) VALUES ({$values})";
+            $this->sql($sql);
+
+            return true;
+
+        } else {
+            // This is an existing record, so just update it in the database
+
+        }
     }
 
 

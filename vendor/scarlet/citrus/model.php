@@ -77,6 +77,15 @@ class Model
 
 
     /**
+     * Are we dealing with a brand new record? If we are then this is set to true.
+     *
+     * @access private
+     * @var bool
+     */
+    private $_new_record = true;
+
+
+    /**
      * The record that we're currently processing.
      *
      * @access private
@@ -384,7 +393,7 @@ class Model
      * @param int $limit The maximum number of records to return. Default to return all.
      * @return mixed
      */
-    private function _find($value, $field=false, $limit=0)
+    final private function _find($value, $field=false, $limit=0)
     {
         if ($field === false) $field = $this->_primaryKey;
         if (!array_key_exists($field, $this->_columns)) throw new \Exception("Unknown column '$field'");
@@ -404,11 +413,12 @@ class Model
      * as findById() and findOneById().
      *
      * @access public
+     * @final
      * @param string $name
      * @param array $arguments
      * @return mixed
      */
-    public function __call($name, $arguments)
+    final public function __call($name, $arguments)
     {
         if (strstr($name, 'find') !== false) { // Catch method calls beginning with 'find'
             if (strstr($name, 'findBy') !== false)
@@ -438,10 +448,11 @@ class Model
      * We use this to return a record, or relationships, field.
      *
      * @access public
+     * @final
      * @param string $name
      * @return mixed
      */
-    public function __get($name)
+    final public function __get($name)
     {
         // Eventually we'll be checking relationships here
 
@@ -462,14 +473,20 @@ class Model
      *
      *      public function password_()
      *
-     * Would hijack the writing of the password so we can do encryption etc.
+     * Would hijack the writing of the password so we can do encryption etc. Make
+     * sure that you return a value, otherwise your field will be permanently set
+     * to 'null'!
+     *
+     * These methods are automatically called by Citrus, you don't have to do
+     * anything else but just add this method to your model.
      *
      * @access public
+     * @final
      * @param string $name
      * @param mixed $value
      * @return void
      */
-    public function __set($name, $value)
+    final public function __set($name, $value)
     {
         if (method_exists($this, "{$name}_")) {
             $value = call_user_func_array(array($this, "{$name}_"), array($value));
@@ -483,10 +500,11 @@ class Model
      * Sets the record that the hydrated model is now working with.
      *
      * @access public
+     * @final
      * @param object $record
      * @return false;
      */
-    public function setRecord($record=false)
+    final public function setRecord($record=false)
     {
         $fields = array();
 
@@ -498,6 +516,33 @@ class Model
         }
 
         $this->_record = $fields;
+        $this->_new_record = false;
     }
+
+
+    /**
+     * Returns the record's values in a great big chunk.
+     *
+     * @access public
+     * @final
+     * @return array
+     */
+    final public function toArray()
+    {
+        return $this->_record;
+    }
+
+
+    /**
+     * Is this record new or not?
+     *
+     * @access public
+     * @final
+     * @return bool
+     */
+     final public function _isNew()
+     {
+         return $this->_new_record;
+     }
     
 }
