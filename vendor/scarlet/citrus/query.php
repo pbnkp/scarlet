@@ -28,7 +28,7 @@ class Query extends Iterator
      * The model that is creating this query.
      * 
      * @access private
-     * @var object
+     * @var object Model
      */
     private $_Model = false;
     
@@ -49,12 +49,30 @@ class Query extends Iterator
 
 
     /**
+     * Have we executed the query?
+     *
+     * @access private
+     * @var bool
+     */
+    private $_executed = false;
+
+
+    /**
+     * Keeps a record of the query resource so we can lazy load records in.
+     *
+     * @access private
+     * @var resource
+     */
+    private $_query;
+
+
+    /**
      * Keeps a record of the returned results.
      *
      * @access private
      * @var array
      */
-    protected $_iterable = array();
+    protected $_records = array();
     
     
     /**
@@ -66,6 +84,7 @@ class Query extends Iterator
     public function __construct($Model=false)
     {
         $this->_Model = $Model;
+        $this->_iterable =& $this->_records;
     }
     
     
@@ -80,6 +99,32 @@ class Query extends Iterator
     public static function __new($Model=false)
     {
         return new Query($Model);
+    }
+
+
+    /**
+     * We define our own valid() method here for iterator, so we can check to see
+     * if execute() has been called yet. If it hasn't, then do it and continue.
+     *
+     * @access public
+     * @return bool
+     */
+    public function valid()
+    {
+        if ($this->_executed === false) $this->execute();
+        $p = parent::valid();
+
+        if ($p === false) {
+            // The iterator thinks that this record doesn't exist. However, it
+            // may just not have been loaded yet. We need to check that here.
+            $record = $this->_query->fetch(\PDO::FETCH_OBJ);
+            if ($record === false) return false;
+
+            $this->_records[] = Record::hydrate($this->_Model, $record);
+            return true;
+        }
+
+        return $p;
     }
     
     
@@ -103,14 +148,76 @@ class Query extends Iterator
      * Executes the query.
      *
      * @access public
+     * @param bool $batchmode Whether to return all results at once rather than
+     *                          the default method of lazy loading.
      * @return object $this
      */
-    public function execute()
+    public function execute($batchmode=false)
     {
+        // Build the SQL to execute, run it, and set the $_query resource to the
+        // cached PDO query.
+        $sql = $this->_buildSQL();
+        $this->_query = $this->sql($sql);
 
+        // Return all records immediately, if required. Otherwise we fall back
+        // to the default method of lazy loading the results.
+        if ($batchmode === true || $this->_params['limit'] == 1) {
+            while ($record = $this->_query->fetch(\PDO::FETCH_OBJ))
+                $this->_records[] = Record::hydrate($this->_Model, $record);
+
+            if (empty($this->_records)) {
+                return false;
+            } elseif (count($this->_records) == 1) {
+                return $this->_records[0];
+            }
+        }
+
+        $this->_executed = true;
         return $this;
     }
 
+
+    /**
+     * Builds the actual SQL for the query.
+     *
+     * @access private
+     * @return string
+     */
+    private function _buildSQL()
+    {
+        switch(strtolower($this->_params['action'])) {
+            case 'select':
+                return $this->_buildSelect();
+                break;
+        }
+    }
+
+
+    /**
+     * Builds the SELECT part of the query.
+     *
+     * @access private
+     * @return string
+     */
+    private function _buildSelect()
+    {
+        $columns = implode(', ', $this->_params['select']);
+
+        $where = '';
+        $f = true;
+        foreach ($this->_params['where'] as $cond) {
+            if ($f === false) $where .= " {$cond['type']}";
+            else $where .= ' WHERE';
+
+            $where .= " {$cond['column']} {$cond['operator']} '{$cond['value']}'";
+        }
+
+        $order = '';
+        $limit = ($this->_params['limit'] === false) ? null : " LIMIT {$this->_params['limit']}";
+        $offset = ($this->_params['offset'] === false) ? null : " OFFSET {$this->_params['offset']}";
+
+        return "SELECT {$columns} FROM `{$this->_Model->getTable()}`{$where}{$order}{$limit}{$offset}";
+    }
 
 
     /**
@@ -132,7 +239,16 @@ class Query extends Iterator
     {
         $this->_params['action'] = 'select';
         $columns = func_get_args();
-        $this->_params['select'] = (empty($columns)) ? array('*') : $columns;
+
+        if (empty($columns)) {
+            // We haven't defined a particular column, so load them all.
+            $this->_params['select'][] = $this->_formatColumn('*');
+        } else {
+            foreach ($columns as $column) {
+                $this->_params['select'][] = $this->_formatColumn($column);
+            }
+        }
+        
         return $this;
     }
     
@@ -201,7 +317,7 @@ class Query extends Iterator
         }
         
         $this->_params['where'][] = array(
-            'column' => $column,
+            'column' => "{$this->_Model->getTable()}.{$column}",
             'operator' => $operator,
             'value' => $value,
             'type' => $type,
@@ -278,6 +394,32 @@ class Query extends Iterator
     {
         $this->_params['offset'] = $offset;
         return $this;
+    }
+
+
+    /**
+     * Converts a column name into something that the ORM can understand. This is
+     * essential to making the relationships work properly.
+     *
+     * @access private
+     * @param string $column The column name to format
+     * @return string
+     */
+    private function _formatColumn($column)
+    {
+        $table = $this->_Model->getTable();
+
+        if ($column == '*') {
+            // We are converting every column in the table
+            $columns = $this->_Model->getColumns();
+            $str = array();
+            foreach ($columns as $column => $params) {
+                $str[] = "{$table}.{$column} as {$table}__{$column}";
+            }
+            return implode(', ', $str);
+        }
+
+        return "{$table}.{$column} as {$table}__{$column}";
     }
     
 }

@@ -74,6 +74,15 @@ class Model
      * @var string|false
      */
     private $_primaryKey;
+
+
+    /**
+     * The record that we're currently processing.
+     *
+     * @access private
+     * @var array
+     */
+    private $_record;
     
     
     /**
@@ -315,6 +324,19 @@ class Model
     {
         return $this->_table;
     }
+
+
+    /**
+     * Returns the columns of the table that we're currently using for this model.
+     *
+     * @access public
+     * @final
+     * @return string
+     */
+    final public function getColumns()
+    {
+        return $this->_columns;
+    }
     
     
     /**
@@ -336,6 +358,10 @@ class Model
         
         $q = $this->query()->select()->where($field, $value);
         if ($limit > 0) $q = $q->limit($limit);
+
+        if ($field === false || $field == $this->_primaryKey || $limit == 1)
+            $q = $q->execute(true);
+
         return $q;
     }
     
@@ -381,6 +407,76 @@ class Model
         // This is an unknown method, so create a new Query
         $q = $this->query();
         return call_user_func_array(array($q, $name), $arguments);
+    }
+
+
+    /**
+     * We use this to return a record, or relationships, field.
+     *
+     * @access public
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        // Eventually we'll be checking relationships here
+
+        // Check to see if a field exists, and if it does return it
+        if (array_key_exists($name, $this->_record)) {
+            return $this->_record[$name];
+        }
+
+        // This is an unknown field or relationship
+        throw new \Exception("Unknown column '$name' on table '{$this->_table}'");
+    }
+
+
+    /**
+     * We use this magic method to hijack the writing of record fields. This means
+     * that we can allow the developer to write instance methods that modify the
+     * data being written. For example:
+     *
+     *      public function password_()
+     *
+     * Would hijack the writing of the password so we can do encryption etc.
+     *
+     * @access public
+     * @param string $name
+     * @param mixed $value
+     * @return void
+     */
+    public function __set($name, $value)
+    {
+        if (method_exists($this, "{$name}_")) {
+            $value = call_user_func_array(array($this, "{$name}_"), array($value));
+        }
+
+        $this->_record[$name] = $value;
+    }
+
+
+    /**
+     * Sets the record that the hydrated model is now working with.
+     *
+     * @access public
+     * @param object $record
+     * @return false;
+     */
+    public function setRecord($record=false)
+    {
+        $fields = array();
+        foreach ($this->_columns as $column => $params) {
+            $fields[$column] = '';
+        }
+
+        if ($record !== false) {
+            foreach ($record as $k => $v) {
+                list($table, $column) = explode('__', $k);
+                $fields[$column] = $v;
+            }
+        }
+
+        $this->_record = $fields;
     }
     
 }
