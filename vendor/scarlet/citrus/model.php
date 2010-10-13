@@ -110,6 +110,12 @@ class Model
         
         // Enumerate the table so we know which fields exist and what type they are
         list($this->_primaryKey, $this->_columns) = Base::getInstance()->enumerateTable($this->_table);
+
+        $fields = '';
+        foreach ($this->_columns as $column => $params) {
+            $fields[$column] = '';
+        }
+        $this->_record = $fields;
     }
     
     
@@ -469,9 +475,6 @@ class Model
     public function setRecord($record=false)
     {
         $fields = array();
-        foreach ($this->_columns as $column => $params) {
-            $fields[$column] = '';
-        }
 
         if ($record !== false) {
             foreach ($record as $k => $v) {
