@@ -337,6 +337,19 @@ class Model
     {
         return $this->_columns;
     }
+
+
+    /**
+     * Creates a new query object for the model.
+     *
+     * @access private
+     * @final
+     * @return object Query
+     */
+    final public function query()
+    {
+        return Query::__new($this);
+    }
     
     
     /**
@@ -363,19 +376,6 @@ class Model
             $q = $q->execute(true);
 
         return $q;
-    }
-    
-    
-    /**
-     * Creates a new query object for the model.
-     *
-     * @access private
-     * @final
-     * @return object Query
-     */
-    final public function query()
-    {
-        return Query::__new($this);
     }
     
     
