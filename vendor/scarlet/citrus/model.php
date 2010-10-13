@@ -356,6 +356,20 @@ class Model
     {
         return Query::__new($this);
     }
+
+
+    /**
+     * Saves the Model to the database. It doesn't matter whether the model is new
+     * or just an update however, it will only be saved if the validations pass.
+     *
+     * @access private
+     * @final
+     * @return bool True if the record was saved successfully
+     */
+    final public function save()
+    {
+        return $this->query()->save();
+    }
     
     
     /**

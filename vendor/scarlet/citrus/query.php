@@ -178,6 +178,18 @@ class Query extends Iterator
 
 
     /**
+     * Saves a record to the database.
+     *
+     * @access public
+     * @return bool
+     */
+    public function save()
+    {
+        
+    }
+
+
+    /**
      * Builds the actual SQL for the query.
      *
      * @access private
