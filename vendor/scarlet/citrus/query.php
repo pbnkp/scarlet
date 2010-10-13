@@ -38,6 +38,7 @@ class Query
      **/
     private $_params = array(
         'limit' => false,
+        'offset' => false,
         'where' => array(),
     );
     
@@ -206,6 +207,24 @@ class Query
     final public function limit($limit)
     {
         $this->_params['limit'] = $limit;
+        return $this;
+    }
+    
+    
+    /**
+     * Performs a SQL offset. The OFFSET statement will be automatically added to the
+     * query, simply state by how much you want the results to be offset. You can
+     * only call this once per query. Calling this multiple times will simply overwrite
+     * the previous OFFSET statement.
+     *
+     * @access public
+     * @final
+     * @param int $offset The result set offset
+     * @return object $this
+     */
+    final public function offset($offset)
+    {
+        $this->_params['offset'] = $offset;
         return $this;
     }
     
