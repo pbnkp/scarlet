@@ -33,7 +33,6 @@ class Autoloader
      */
     public static function load($name)
     {
-        //var_dump($name);
         $name = explode('\\', $name);
         if (count($name) < 2) throw new \Exception("Malformed class name");
         if (empty($name[0])) array_shift($name);

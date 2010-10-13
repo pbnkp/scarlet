@@ -406,7 +406,11 @@ class Model
 
         // This is an unknown method, so create a new Query
         $q = $this->query();
-        return call_user_func_array(array($q, $name), $arguments);
+        if (method_exists($q, $name)) {
+            return call_user_func_array(array($q, $name), $arguments);
+        }
+
+        throw new \Exception("Unknown method '$name'");
     }
 
 
