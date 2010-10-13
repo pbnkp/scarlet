@@ -334,7 +334,7 @@ class Model
         if ($field === false) $field = $this->_primaryKey;
         if (!array_key_exists($field, $this->_columns)) throw new \Exception("Unknown column '$field'");
         
-        $q = $this->query()->where($field, $value);
+        $q = $this->query()->select()->where($field, $value);
         if ($limit > 0) $q = $q->limit($limit);
         return $q;
     }
@@ -377,6 +377,10 @@ class Model
             return $this->_find($arguments[0], false, 1);
             
         }
+
+        // This is an unknown method, so create a new Query
+        $q = $this->query();
+        return call_user_func_array(array($q, $name), $arguments);
     }
     
 }
