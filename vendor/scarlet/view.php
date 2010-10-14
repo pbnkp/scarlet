@@ -109,6 +109,7 @@ class View
         $this->loadHelpers();
         
         ob_start();
+        extract($this->data);
         include($viewfile);
         $this->_content['__main__'] = ob_get_contents();
         ob_end_clean();
