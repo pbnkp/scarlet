@@ -36,12 +36,16 @@ class Model
      * @access private
      * @var array
      */
-    private $_relationships = array(
-        'belongs_to' => array(),
-        'has_one' => array(),
-        'has_many' => array(),
-        'has_and_belongs_to_many' => array(),
-    );
+    private $_relationships = array();
+
+
+    /**
+     * Caches the models that are used in the relationships.
+     *
+     * @access private
+     * @var array
+     */
+    private $_cached_relationship_models = array();
     
     
     /**
@@ -141,8 +145,8 @@ class Model
     final protected function belongsTo($model, $options=array())
     {
         // Default options for this type of relationship
-        $defaults = array();
-        $this->_relationships['belongs_to'][$model] = array_merge($defaults, $options);
+        $defaults = array('_type' => 'belongs_to');
+        $this->_relationships[$model] = array_merge($defaults, $options);
     }
     
     
@@ -159,8 +163,8 @@ class Model
     final protected function hasOne($model, $options=array())
     {
         // Default options for this type of relationship
-        $defaults = array();
-        $this->_relationships['has_one'][$model] = array_merge($defaults, $options);
+        $defaults = array('_type' => 'has_one');
+        $this->_relationships[$model] = array_merge($defaults, $options);
     }
     
     
@@ -174,11 +178,11 @@ class Model
      * @param array $options Any other relationship specific options.
      * @return void
      */
-    final protected function hasMany($mode, $optins=array())
+    final protected function hasMany($model, $options=array())
     {
         // Default options for this type of relationship
-        $defaults = array();
-        $this->_relationships['has_many'][$model] = array_merge($defaults, $options);
+        $defaults = array('_type' => 'has_many');
+        $this->_relationships[$model] = array_merge($defaults, $options);
     }
     
     
@@ -195,8 +199,8 @@ class Model
     final protected function hasAndBelongsToMany($model, $options=array())
     {
         // Default options for this type of relationship
-        $defaults = array();
-        $this->_relationships['has_and_belongs_to_many'][$model] = array_merge($defaults, $options);
+        $defaults = array('_type' => 'has_and_belongs_to_many');
+        $this->_relationships[$model] = array_merge($defaults, $options);
     }
     
     
@@ -310,6 +314,19 @@ class Model
         if ($type === false) return $this->_validations;
         $type = \Scarlet\Inflector::underscore($type);
         return (isset($this->_validations[$type])) ? $this->_validations[$type] : array();
+    }
+
+
+    /**
+     * Returns the primary key.
+     *
+     * @access public
+     * @final
+     * @return string
+     */
+    final public function getPrimaryKey()
+    {
+        return $this->_primaryKey;
     }
     
     
@@ -461,6 +478,49 @@ class Model
             return $this->_record[$name];
         }
 
+
+        // We haven't got a field called that, so fall back to looking for a relationship
+        if (array_key_exists($name, $this->_cached_relationship_models)) {
+            // Use a cached model as we don't have to worry the database again
+            return $this->_cached_relationship_models[$name];
+
+        } elseif (array_key_exists($name, $this->_relationships)) {
+            // We haven't got a cached model, so we're going to have to load it
+            $relationship = $this->_relationships[$name];
+
+            $table = (array_key_exists('table', $relationship)) ? $relationship['table'] : $name;
+            $table = \Scarlet\Inflector::camelize($table, true);
+
+            $class = "\App\Models\\{$table}";
+            $m = new $class;
+            $o = false;
+
+            switch($relationship['_type']) {
+                case 'belongs_to':
+                    $key = "{$m->getTable()}_{$m->getPrimaryKey()}";
+                    $o = $m->find($this->{$key});
+                    break;
+
+                case 'has_one':
+                    $table = \Scarlet\Inflector::camelize($this->_table, true);
+                    $key = \Scarlet\Inflector::camelize($this->_primaryKey, true);
+                    $o = $m->{"findOneBy{$table}{$key}"}($this->{$this->_primaryKey});
+                    break;
+
+                case 'has_many':
+                    $table = \Scarlet\Inflector::camelize($this->_table, true);
+                    $key = \Scarlet\Inflector::camelize($this->_primaryKey, true);
+                    $o = $m->{"findBy{$table}{$key}"}($this->{$this->_primaryKey});
+                    break;
+
+                default:
+                    throw new \Exception("Unknown relationship type '{$relationship['_type']}'");
+            }
+
+            $this->_cached_relationship_models[$name] = $o;
+            return $o;
+        }
+
         // This is an unknown field or relationship
         throw new \Exception("Unknown column '$name' on table '{$this->_table}'");
     }
@@ -502,12 +562,13 @@ class Model
      * @access public
      * @final
      * @param object $record
-     * @return false;
+     * @return false
      */
     final public function setRecord($record=false)
     {
         $fields = array();
 
+        // Parse the returned record
         if ($record !== false) {
             foreach ($record as $k => $v) {
                 list($table, $column) = explode('__', $k);
