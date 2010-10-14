@@ -178,19 +178,6 @@ class Query extends Iterator
 
 
     /**
-     * Returns the number of rows in this query.
-     *
-     * @access public
-     * @return int
-     */
-    public function rowCount()
-    {
-        if (!$this->_executed) $this->execute();
-        return $this->_query->rowCount();
-    }
-
-
-    /**
      * Saves a record to the database.
      *
      * @access public
@@ -469,6 +456,23 @@ class Query extends Iterator
         }
 
         return "{$table}.{$column} as {$table}__{$column}";
+    }
+
+
+    /**
+     * Catches an unknown method calls. We are assuming that any methods not defined
+     * here are actually part of the PDO, so we try to map to that instead.
+     *
+     * @access private
+     * @final
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     */
+    final public function __call($name, $arguments)
+    {
+        if (!$this->_executed) $this->execute();
+        return call_user_func_array(array($this->_query, $name), $arguments);
     }
     
 }
