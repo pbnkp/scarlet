@@ -189,7 +189,6 @@ class Query extends Iterator
 
         if ($this->_Model->_isNew()) {
             // This is a new record, so insert it into the database
-            var_dump($params);
             $columns = array();
             $values = array();
 
