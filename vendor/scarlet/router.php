@@ -86,6 +86,7 @@ class Router
     
     public function match($rule, $target=array(), $conditions=array())
     {
+        $target = $this->parse_target($target);
         $this->routes[$rule] = new Route($rule, $this->request_uri, $target, $conditions);
     }
     
