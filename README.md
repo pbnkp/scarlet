@@ -7,7 +7,9 @@ __This is alpha software. Things *are* going to change.__
 
 ##High Performance
 
-Built with performance in mind, Scarlet is already 3 times faster than Zend Framework 1.10 and 5 times faster than CakePHP. The event-driven nature of Scarlet means that plugin code is loaded and executed only when necessary.
+Built with performance in mind, Scarlet is already 4 times faster than Zend Framework 1.10 and 6 times faster than CakePHP. The event-driven nature of Scarlet means that plugin code is loaded and executed only when necessary.
+
+Citrus, our custom ORM, is compatible with all major database engines whilst still providing raw performance. With built-in Model relationships and validations we maintain performance by lazy-loading everything. In addition, Citrus also provide out-of-the-box support for MySQL master/slave database setups, Memcache and defines it's own database agnostic query language (CQL, short for Citrus Query Language).
 
 
 ##Extensible & Flexible
