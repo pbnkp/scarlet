@@ -85,7 +85,8 @@ class View
             // We can't find the viewfile, so if we're in debug mode throw an exception
             if (Environment::getInstance()->isDebug()) {
                 $prefix = ($type == 'partial') ? '_' : '';
-                throw new \Exception("Missing template $controller/$prefix$action.{$this->format}.php");
+                $a = (isset($action)) ? $action : $view;
+                throw new \Exception("Missing template {$this->view_folder}/$prefix$a.{$this->format}.php");
             } else {
                 // If this is a view or layout then go 404
                 if ($type != 'partial') {
