@@ -128,10 +128,20 @@ class Environment
      */
     public function isDebug()
     {
-        if (isset($this->_config->application->debug) && $this->_config->application->debug == 1) {
-            return true;
+        if (isset($_SERVER['SCARLET_ENV'])) {
+            switch (strtolower($_SERVER['SCARLET_ENV'])) {
+                case 'development':
+                case 'testing':
+                    return true;
+                    break;
+                
+                case 'production':
+                    return false;
+                    break;
+            }
         }
-        return false;
+        
+        return true;
     }
     
     
