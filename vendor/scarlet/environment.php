@@ -19,6 +19,11 @@ namespace Scarlet;
 class Environment
 {
     
+    const MODE_DEVELOPMENT = 0;
+    const MODE_TESTING = 1;
+    const MODE_PRODUCTION = 2;
+    
+    
     /**
      * The instance for the singleton.
      * 
@@ -128,20 +133,35 @@ class Environment
      */
     public function isDebug()
     {
-        if (isset($_SERVER['SCARLET_ENV'])) {
-            switch (strtolower($_SERVER['SCARLET_ENV'])) {
-                case 'development':
-                case 'testing':
-                    return true;
-                    break;
-                
-                case 'production':
-                    return false;
-                    break;
-            }
-        }
-        
+        if ($this->getMode() === self::MODE_PRODUCTION) return false;
         return true;
+    }
+    
+    
+    /**
+     * Returns the current application environment mode. Will be either Environment::MODE_TESTING,
+     * Environment::MODE_DEVELOPMENT or Environment::MODE_PRODUCTION.
+     * 
+     * @access public
+     * @return int
+     */
+    public function getMode()
+    {
+        $env = (isset($_SERVER['SCARLET_ENV'])) ? strtolower($_SERVER['SCARLET_ENV']) : false;
+        
+        switch ($env) {
+            case 'testing':
+                return self::MODE_TESTING;
+                break;
+            
+            case 'production':
+                return self::MODE_PRODUCTION;
+                break;
+            
+            default:
+                return self::MODE_DEVELOPMENT;
+                break;
+        }
     }
     
     
