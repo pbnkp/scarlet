@@ -160,7 +160,7 @@ class Kernel
         
         // Run the action
         if (method_exists($Controller, $Router->getAction())) {
-            call_user_func_array(array($Controller, $Router->getAction()), array());
+            $return_value = call_user_func_array(array($Controller, $Router->getAction()), array());
         } else {
             // We can't find the controller/action. If we're in debug mode then
             // print out the exception to screen, otherwise just show a 404 page.
@@ -170,6 +170,12 @@ class Kernel
                 echo file_get_contents(PUBLIC_DIR . DS . '404.html');
                 exit;
             }
+        }
+        
+        // If we have returned a boolean false then we should display the 404 page
+        if ($return_value === false) {
+            echo file_get_contents(PUBLIC_DIR . DS . '404.html');
+            exit;
         }
         
         
