@@ -181,7 +181,7 @@ class Query extends Iterator
      * Saves a record to the database.
      *
      * @access public
-     * @return bool
+     * @return bool|PDOStatement Returns false if the save failed
      */
     public function save()
     {
@@ -201,13 +201,22 @@ class Query extends Iterator
             $values = implode(',', $values);
             
             $sql = "INSERT INTO `{$this->_Model->getTable()}` ({$columns}) VALUES ({$values})";
-            $this->sql($sql);
-
-            return true;
+            return $this->sql($sql);
 
         } else {
             // This is an existing record, so just update it in the database
+            $updates = array();
+            foreach ($params as $c => $v) {
+                $updates[] = "{$c} = '{$v}'";
+            }
+            $updates = implode(',', $updates);
 
+            $pk = $this->_Model->getPrimaryKey();
+            $pkv = $this->_Model->{$pk};
+
+            $sql = "UPDATE `{$this->_Model->getTable()}` SET {$updates} WHERE {$pk} = '{$pkv}'";
+            return $this->sql($sql);
+            
         }
     }
 
