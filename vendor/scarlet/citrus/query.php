@@ -222,7 +222,7 @@ class Query extends Iterator
 
 
     /**
-     * Deletes a record from the database.
+     * Deletes a single record from the database.
      *
      * @access public
      * @return bool
@@ -236,6 +236,21 @@ class Query extends Iterator
         $pkv = $this->_Model->{$pk};
         $sql = "DELETE FROM `{$this->_Model->getTable()}` WHERE {$pk} = '{$pkv}'";
         return $this->sql($sql);
+    }
+
+
+    /**
+     * Deletes all instances of records that match the query. Useful as a shortcut
+     * when doing findMany and then deleting them.
+     *
+     * @access public
+     * @return void
+     */
+    public function deleteAll()
+    {
+        $records = $this->execute();
+        foreach ($records as $record)
+            $record->delete();
     }
 
 
