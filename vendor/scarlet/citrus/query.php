@@ -222,6 +222,24 @@ class Query extends Iterator
 
 
     /**
+     * Deletes a record from the database.
+     *
+     * @access public
+     * @return bool
+     */
+    public function delete()
+    {
+        if ($this->_Model->_isNew())
+           return false;
+
+        $pk = $this->_Model->getPrimaryKey();
+        $pkv = $this->_Model->{$pk};
+        $sql = "DELETE FROM `{$this->_Model->getTable()}` WHERE {$pk} = '{$pkv}'";
+        return $this->sql($sql);
+    }
+
+
+    /**
      * Builds the actual SQL for the query.
      *
      * @access private

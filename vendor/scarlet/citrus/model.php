@@ -388,13 +388,26 @@ class Model
      * Saves the Model to the database. It doesn't matter whether the model is new
      * or just an update however, it will only be saved if the validations pass.
      *
-     * @access private
+     * @access public
      * @final
      * @return bool True if the record was saved successfully
      */
     final public function save()
     {
         return $this->query()->save();
+    }
+
+
+    /**
+     * Deletes the record from the database.
+     *
+     * @access public
+     * @final
+     * @return bool True if the record was deleted successfully
+     */
+    final public function delete()
+    {
+        return $this->query()->delete();
     }
     
     
