@@ -50,6 +50,17 @@ class Base
 
 
     /**
+     * A temporary cache of the enumerated table results. We should then only
+     * have to query the database once per table per request. Eventually this
+     * will be moved into a proper stateless cache.
+     *
+     * @access private
+     * @var array
+     */
+    private $_enumerated_tables = array();
+
+
+    /**
      * This class is a singleton. Use getInstance();
      *
      * @access private
@@ -154,7 +165,13 @@ class Base
      */
     public function enumerateTable($table)
     {
-        return Query::__new()->describe($table);
+        if (array_key_exists($table, $this->_enumerated_tables)) {
+            return $this->_enumerated_tables[$table];
+        }
+
+        $description = Query::__new()->describe($table);
+        $this->_enumerated_tables[$table] = $description;
+        return $description;
     }
 
 }
