@@ -295,6 +295,48 @@ class Query extends Iterator
 
         return "SELECT {$columns} FROM `{$this->_Model->getTable()}`{$where}{$order}{$limit}{$offset}";
     }
+    
+    
+    /**
+     * Starts a new transaction. Nothing is written to your database until you
+     * use commit(). If something has gone wrong, then you can use the rollback()
+     * method to undo your changes.
+     * 
+     * @access public
+     * @final
+     * @return mixed
+     */
+    final public function startTransaction()
+    {
+        return $this->sql("START TRANSACTION");
+    }
+    
+    
+    /**
+     * Commits the changes to the database.
+     * 
+     * @access public
+     * @final
+     * @return mixed
+     */
+    final public function commit()
+    {
+        return $this->sql("COMMIT");
+    }
+    
+    
+    /**
+     * Rollbacks the latest transaction.
+     * 
+     * @access public
+     * @final
+     * @return mixed
+     */
+    final public function rollback()
+    {
+        return $this->sql("ROLLBACK");
+    }
+    
 
 
     /**
