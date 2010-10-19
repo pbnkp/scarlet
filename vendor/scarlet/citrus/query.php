@@ -308,7 +308,7 @@ class Query extends Iterator
      */
     final public function startTransaction()
     {
-        return $this->sql("START TRANSACTION");
+        return Base::connectionManager()->getConnection()->beginTransaction();
     }
     
     
@@ -321,7 +321,7 @@ class Query extends Iterator
      */
     final public function commit()
     {
-        return $this->sql("COMMIT");
+        return Base::connectionManager()->getConnection()->commit();
     }
     
     
@@ -334,7 +334,7 @@ class Query extends Iterator
      */
     final public function rollback()
     {
-        return $this->sql("ROLLBACK");
+        return Base::connectionManager()->getConnection()->rollBack();
     }
     
 
