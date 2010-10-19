@@ -38,6 +38,16 @@ class Base
      * @var resource
      */
     private $_db;
+    
+    
+    /**
+     * A temporary placeholder of database configuration settings until we
+     * implement full environment switching.
+     * 
+     * @access private
+     * @var array
+     */
+    private $_config;
 
 
     /**
@@ -139,7 +149,12 @@ class Base
         $options = $connection;
         unset($options['adapter'], $options['database'], $options['host'], $options['encoding'], $options['username'], $options['password']);
         
-        $this->_db = new \PDO($dsn, $username, $password, $options);
+        $this->_config = array(
+            'dsn' => $dsn,
+            'username' => $username,
+            'password' => $password,
+            'options' => $options,
+        );
     }
 
 
@@ -151,6 +166,10 @@ class Base
      */
     public function getConnection()
     {
+        if (!isset($this->_db)) {
+            $this->_db = new \PDO($this->_config['dsn'], $this->_config['username'], $this->_config['password'], $this->_config['options']);
+        }
+        
         return $this->_db;
     }
 
