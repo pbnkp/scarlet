@@ -143,23 +143,24 @@ class Environment
      * Environment::MODE_DEVELOPMENT or Environment::MODE_PRODUCTION.
      * 
      * @access public
+     * @param bool $text Whether to return the environment as an integer (default) or string
      * @return int
      */
-    public function getMode()
+    public function getMode($text=false)
     {
         $env = (isset($_SERVER['SCARLET_ENV'])) ? strtolower($_SERVER['SCARLET_ENV']) : false;
         
         switch ($env) {
             case 'testing':
-                return self::MODE_TESTING;
+                return ($text === true) ? "testing" : self::MODE_TESTING;
                 break;
             
             case 'production':
-                return self::MODE_PRODUCTION;
+                return ($text === true) ? "production" : self::MODE_PRODUCTION;
                 break;
             
             default:
-                return self::MODE_DEVELOPMENT;
+                return ($text === true) ? "development" : self::MODE_DEVELOPMENT;
                 break;
         }
     }
@@ -173,7 +174,7 @@ class Environment
      */
     public function __destruct()
     {
-        if ($this->isDebug()) {
+        if ($this->isDebug() && php_sapi_name() != 'cli') {
             echo '<!-- ' . round(microtime(true) - self::$_TIMESTART, 4) . 's -->';
         }
     }
